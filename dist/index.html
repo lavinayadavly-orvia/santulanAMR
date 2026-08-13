@@ -178,13 +178,18 @@
       border-bottom: 1px solid rgba(255,255,255,.22);
       background: rgba(255, 139, 40, .96);
       backdrop-filter: blur(10px);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 0 26px;
       position: sticky;
       top: 0;
       z-index: 10;
+    }
+    .topbar-inner {
+      min-height: 78px;
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 28px;
     }
     .mobile-menu { display: none; }
     .title-wrap { min-width: 150px; flex: 1; }
@@ -210,13 +215,117 @@
       background: transparent;
       color: var(--ink);
     }
-    .content { padding: 28px; max-width: 1480px; margin: 0 auto; }
+    .content { padding: 28px; max-width: 1240px; margin: 0 auto; }
     .view { display: none; }
     .view.active { display: block; }
     .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
     .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
     .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
     .wide-layout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(320px, .75fr); gap: 14px; align-items: start; }
+    .dashboard-shell { display: grid; gap: 18px; }
+    .dashboard-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: end;
+      padding: 22px;
+      background: #fff;
+      border: 2px solid #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.56), var(--shadow);
+    }
+    .eyebrow {
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .dashboard-hero h2 {
+      margin: 6px 0 8px;
+      font-size: 28px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+    .dashboard-hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 720px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .hero-actions {
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+      gap: 10px;
+      align-items: center;
+    }
+    .dashboard-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .dashboard-workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(330px, .65fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .dashboard-stack { display: grid; gap: 18px; }
+    .dashboard-rail { display: grid; gap: 18px; }
+    .section-head {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 850;
+      margin: 0 0 10px;
+      text-shadow: 0 1px 12px rgba(255, 139, 40, .22);
+    }
+    .continue-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(230px, .45fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+    .resume-card {
+      min-height: 176px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .resume-kicker { color: var(--muted); font-size: 12px; font-weight: 720; }
+    .resume-title { margin-top: 5px; font-size: 18px; font-weight: 850; line-height: 1.25; }
+    .resume-meta { margin-top: 8px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .reference-list {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+    .reference-button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+      font-weight: 760;
+      font-size: 13px;
+    }
+    .reference-button span {
+      color: var(--muted);
+      font-weight: 650;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .reference-button:hover { border-color: var(--teal); background: #fff8f1; }
+    .action-stack { display: grid; gap: 10px; }
     .panel {
       background: var(--panel);
       border: 2px solid #fff;
@@ -456,26 +565,6 @@
     }
     .dose-value { color: var(--blue); font-size: 20px; font-weight: 850; }
     .dose-label { color: var(--muted); font-size: 11px; margin-top: 4px; }
-    .chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .info-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      min-height: 30px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 2px solid #fff;
-      background: var(--panel);
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .info-chip strong { color: var(--ink); }
     .hero-board {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(330px, .8fr);
@@ -850,7 +939,8 @@
     @media (max-width: 1100px) {
       .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .wide-layout { grid-template-columns: 1fr; }
+      .wide-layout, .dashboard-workspace { grid-template-columns: 1fr; }
+      .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .global-search { width: min(360px, 36vw); }
     }
     @media (max-width: 760px) {
@@ -865,10 +955,12 @@
       }
       .sidebar.open { transform: translateX(0); }
       .mobile-menu { display: inline-flex; }
-      .topbar { height: auto; min-height: 68px; flex-wrap: wrap; padding: 12px 14px; }
+      .topbar { height: auto; min-height: 68px; }
+      .topbar-inner { flex-wrap: wrap; min-height: 68px; padding: 12px 14px; }
       .global-search { width: 100%; order: 3; }
       .content { padding: 16px; }
-      .grid-4, .grid-3, .grid-2, .form-grid, .dose-output, .stacked-bar, .filter-panel, .reference-grid { grid-template-columns: 1fr; }
+      .grid-4, .grid-3, .grid-2, .form-grid, .dose-output, .stacked-bar, .filter-panel, .reference-grid, .dashboard-metrics, .dashboard-hero, .continue-panel { grid-template-columns: 1fr; }
+      .hero-actions { grid-template-columns: 1fr; }
       .timeline-row { grid-template-columns: 1fr; }
       .item { grid-template-columns: auto 1fr; }
       .item > .actions { grid-column: 2; }
@@ -915,47 +1007,88 @@
 
     <main class="main">
       <header class="topbar">
-        <button class="btn icon-btn mobile-menu" id="menuBtn" aria-label="Open navigation">=</button>
-        <div class="title-wrap">
-          <div class="top-title" id="viewTitle">Dashboard</div>
-          <div class="top-sub" id="viewSub">Institutional antimicrobial stewardship overview</div>
-        </div>
-        <div class="global-search" role="search">
-          <span aria-hidden="true">Search</span>
-          <input id="globalSearch" type="search" placeholder="drug, organism, condition, case">
+        <div class="topbar-inner">
+          <button class="btn icon-btn mobile-menu" id="menuBtn" aria-label="Open navigation">=</button>
+          <div class="title-wrap">
+            <div class="top-title" id="viewTitle">Dashboard</div>
+            <div class="top-sub" id="viewSub">Institutional antimicrobial stewardship overview</div>
+          </div>
+          <div class="global-search" role="search">
+            <span aria-hidden="true">Search</span>
+            <input id="globalSearch" type="search" placeholder="drug, organism, condition, case">
+          </div>
         </div>
       </header>
 
       <section class="content">
         <div class="view active" id="view-dashboard">
-          <div class="chip-row">
-            <span class="info-chip"><strong>Purpose</strong> Guidance and doctor training</span>
-            <span class="info-chip"><strong>Cases</strong> Curated educational journeys</span>
-            <span class="info-chip"><strong>Antibiogram</strong> State-provided AMR data</span>
-            <span class="info-chip"><strong>Network</strong> No third-party scripts</span>
-          </div>
-          <div class="grid-4" id="metrics"></div>
-          <div class="wide-layout section-title-wrap">
-            <div>
-              <div class="section-title">Stewardship Alerts</div>
-              <div class="panel">
-                <div class="list" id="alertsList"></div>
+          <div class="dashboard-shell">
+            <section class="dashboard-hero">
+              <div>
+                <div class="eyebrow">Doctor workspace</div>
+                <h2>Welcome back, Dr Annpurna Gaggar</h2>
+                <p>Your AMR learning desk brings together recent case journeys, saved guideline references, state antibiogram context, and stewardship next steps.</p>
               </div>
-            </div>
-            <div>
-              <div class="section-title">Quick Actions</div>
-              <div class="panel pad">
-                <div class="actions" style="display:grid; gap:10px;">
-                  <button class="btn primary" data-jump="recommend">New guideline recommendation</button>
-                  <button class="btn" data-jump="dose">Review dosing safety principles</button>
-                  <button class="btn" data-jump="sensitivity">Open state antibiogram</button>
-                  <button class="btn" data-jump="patients">Study case journeys</button>
-                </div>
+              <div class="hero-actions">
+                <button class="btn primary" data-jump="patients">Resume case</button>
+                <button class="btn" data-jump="sensitivity">Open antibiogram</button>
               </div>
-              <div class="section-title">Today</div>
-              <div class="panel">
-                <div class="timeline" id="todayTimeline"></div>
+            </section>
+
+            <div class="dashboard-metrics" id="metrics"></div>
+
+            <div class="dashboard-workspace">
+              <div class="dashboard-stack">
+                <section>
+                  <div class="section-head">Continue Where You Left Off</div>
+                  <div class="panel pad continue-panel">
+                    <div class="resume-card">
+                      <div>
+                        <div class="resume-kicker">Last case journey</div>
+                        <div class="resume-title">CRE Klebsiella in ICU: escalation, culture review, and de-escalation</div>
+                        <div class="resume-meta">Next step: compare empirical choice with current state susceptibility and identify the de-escalation checkpoint.</div>
+                      </div>
+                      <div class="actions">
+                        <button class="btn primary" data-jump="patients">Continue reading</button>
+                        <button class="btn" data-jump="guidelines">Open pathway</button>
+                      </div>
+                    </div>
+                    <div class="reference-list">
+                      <button class="reference-button" data-jump="guidelines">CAP pathway <span>Saved</span></button>
+                      <button class="reference-button" data-jump="dose">Renal dosing checks <span>Review</span></button>
+                      <button class="reference-button" data-jump="learning">AWaRe module <span>35%</span></button>
+                    </div>
+                  </div>
+                </section>
+
+                <section>
+                  <div class="section-head">Stewardship Alerts</div>
+                  <div class="panel">
+                    <div class="list" id="alertsList"></div>
+                  </div>
+                </section>
               </div>
+
+              <aside class="dashboard-rail">
+                <section>
+                  <div class="section-head">Quick Actions</div>
+                  <div class="panel pad">
+                    <div class="action-stack">
+                      <button class="btn primary" data-jump="recommend">New guideline recommendation</button>
+                      <button class="btn" data-jump="dose">Review dosing safety principles</button>
+                      <button class="btn" data-jump="sensitivity">Open state antibiogram</button>
+                      <button class="btn" data-jump="patients">Study case journeys</button>
+                    </div>
+                  </div>
+                </section>
+
+                <section>
+                  <div class="section-head">Today</div>
+                  <div class="panel">
+                    <div class="timeline" id="todayTimeline"></div>
+                  </div>
+                </section>
+              </aside>
             </div>
           </div>
         </div>
