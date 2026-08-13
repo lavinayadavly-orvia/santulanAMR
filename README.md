@@ -32,6 +32,6 @@ If deploying with Wrangler:
 npm run deploy:cloudflare
 ```
 
-This runs validation, builds `dist/`, and deploys `dist` to the `santulanamr` Pages project.
+This runs validation, builds `dist/`, and deploys `dist` to the `santulanamr-thb` Pages project.
 
 Do not use `npx wrangler deploy` for this Pages project unless Cloudflare is configured to deploy Worker static assets. The Pages command is `wrangler pages deploy dist`.
