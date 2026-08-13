@@ -6,7 +6,11 @@
   <title>SantulanAMR - Antimicrobial Stewardship App</title>
   <style>
     :root {
-      --bg: #FF8B28;
+      --theme: #FF8B28;
+      --theme-rgb: 255, 139, 40;
+      --theme-hover: #ff9c45;
+      --theme-soft: #fff0e2;
+      --bg: var(--theme);
       --panel: #ffffff;
       --panel-2: #f7f9f8;
       --ink: #17231f;
@@ -14,9 +18,9 @@
       --faint: #9aa29f;
       --line: #e3e8e5;
       --line-strong: #cbd4d0;
-      --teal: #FF8B28;
+      --teal: var(--theme);
       --teal-dark: #17231f;
-      --teal-soft: #fff0e2;
+      --teal-soft: var(--theme-soft);
       --blue: #3267a8;
       --blue-soft: #e7eef8;
       --amber: #d98200;
@@ -28,8 +32,8 @@
       --green: #4f7f38;
       --green-soft: #e8f1e2;
       --cream: #fff8ee;
-      --clay: #FF8B28;
-      --shadow: 0 22px 54px rgba(255, 139, 40, 0.24);
+      --clay: var(--theme);
+      --shadow: 0 22px 54px rgba(var(--theme-rgb), 0.24);
       --radius: 8px;
       --nav: 260px;
       color-scheme: light;
@@ -93,7 +97,7 @@
       width: 40px;
       height: 40px;
       border-radius: 8px;
-      background: #FF8B28;
+      background: var(--theme);
       color: #fff;
       display: grid;
       place-items: center;
@@ -126,8 +130,8 @@
       text-align: left;
       margin-bottom: 3px;
     }
-    .nav-item:hover { background: #fff7f0; color: var(--ink); }
-    .nav-item.active { background: #FF8B28; color: #fff; font-weight: 820; box-shadow: 0 10px 26px rgba(255, 139, 40, .32); }
+    .nav-item:hover { background: var(--theme-soft); color: var(--ink); }
+    .nav-item.active { background: var(--theme); color: #fff; font-weight: 820; box-shadow: 0 10px 26px rgba(var(--theme-rgb), .32); }
     .nav-item.active .badge { background: rgba(255,255,255,.2); color: #fff; }
     .badge {
       display: inline-flex;
@@ -136,7 +140,7 @@
       min-height: 20px;
       padding: 2px 8px;
       border-radius: 999px;
-      background: #fff0e2;
+      background: var(--theme-soft);
       color: #17231f;
       font-size: 11px;
       font-weight: 750;
@@ -149,8 +153,12 @@
     .badge.green { background: var(--green-soft); color: var(--green); }
     .badge.neutral { background: #eef1f3; color: #56625f; }
     .nav-item .badge { margin-left: auto; }
-    .persona {
+    .sidebar-theme {
       margin-top: auto;
+      padding: 16px;
+      border-top: 1px solid var(--line);
+    }
+    .persona {
       padding: 16px;
       border-top: 1px solid var(--line);
       display: flex;
@@ -176,7 +184,7 @@
     .topbar {
       min-height: 78px;
       border-bottom: 1px solid rgba(255,255,255,.22);
-      background: rgba(255, 139, 40, .96);
+      background: rgba(var(--theme-rgb), .96);
       backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
@@ -205,7 +213,7 @@
       border: 2px solid rgba(255,255,255,.9);
       border-radius: 8px;
       padding: 9px 12px;
-      box-shadow: 0 8px 24px rgba(255, 139, 40, .2);
+      box-shadow: 0 8px 24px rgba(var(--theme-rgb), .2);
     }
     .global-search input {
       border: 0;
@@ -263,7 +271,7 @@
     .theme-picker {
       display: grid;
       gap: 8px;
-      justify-items: end;
+      justify-items: start;
     }
     .theme-picker-label {
       color: var(--muted);
@@ -276,7 +284,8 @@
       display: flex;
       gap: 8px;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: flex-start;
+      flex-wrap: wrap;
     }
     .theme-swatch {
       width: 28px;
@@ -288,7 +297,7 @@
       padding: 0;
     }
     .theme-swatch.active {
-      box-shadow: 0 0 0 3px rgba(255, 139, 40, .36), 0 6px 16px rgba(23, 35, 31, .12);
+      box-shadow: 0 0 0 3px rgba(var(--theme-rgb), .36), 0 6px 16px rgba(23, 35, 31, .12);
     }
     .theme-swatch:focus-visible {
       outline: 3px solid rgba(23, 35, 31, .22);
@@ -312,7 +321,7 @@
       font-size: 15px;
       font-weight: 850;
       margin: 0 0 10px;
-      text-shadow: 0 1px 12px rgba(255, 139, 40, .22);
+      text-shadow: 0 1px 12px rgba(var(--theme-rgb), .22);
     }
     .continue-panel {
       display: grid;
@@ -358,7 +367,7 @@
       font-size: 12px;
       white-space: nowrap;
     }
-    .reference-button:hover { border-color: var(--teal); background: #fff8f1; }
+    .reference-button:hover { border-color: var(--teal); background: var(--theme-soft); }
     .action-stack { display: grid; gap: 10px; }
     .panel {
       background: var(--panel);
@@ -401,7 +410,7 @@
     .trend.good { color: var(--green); }
     .trend.warn { color: var(--amber); }
     .trend.risk { color: var(--red); }
-    .section-title { color: #fff; font-size: 16px; font-weight: 820; margin: 26px 0 12px; text-shadow: 0 1px 12px rgba(255, 139, 40, .22); }
+    .section-title { color: #fff; font-size: 16px; font-weight: 820; margin: 26px 0 12px; text-shadow: 0 1px 12px rgba(var(--theme-rgb), .22); }
     .list { padding: 8px 18px 14px; }
     .item {
       display: grid;
@@ -449,8 +458,8 @@
       white-space: nowrap;
     }
     .btn:hover { background: var(--panel-2); }
-    .btn.primary { background: #FF8B28; border-color: #FF8B28; color: #fff; }
-    .btn.primary:hover { background: #ff9c45; border-color: #ff9c45; }
+    .btn.primary { background: var(--theme); border-color: var(--theme); color: #fff; }
+    .btn.primary:hover { background: var(--theme-hover); border-color: var(--theme-hover); }
     .btn.danger { color: var(--red); border-color: #efc4c4; }
     .icon-btn {
       width: 36px;
@@ -492,12 +501,12 @@
       outline: 0;
     }
     textarea { min-height: 86px; resize: vertical; line-height: 1.45; }
-    input:focus, select:focus, textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(255, 139, 40, .18); }
+    input:focus, select:focus, textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(var(--theme-rgb), .18); }
     .full { grid-column: 1 / -1; }
     .result-box {
       border: 1px solid var(--line);
       border-left: 4px solid var(--teal);
-      background: #fff8f1;
+      background: var(--theme-soft);
       border-radius: var(--radius);
       padding: 16px;
       margin-top: 16px;
@@ -532,7 +541,7 @@
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: .06em;
-      background: #fff6ee;
+      background: var(--theme-soft);
       border-bottom: 1px solid var(--line);
       padding: 11px 12px;
       white-space: nowrap;
@@ -611,11 +620,11 @@
       padding: 26px;
       border-radius: 8px;
       background:
-        linear-gradient(135deg, rgba(255, 139, 40, .98), rgba(255, 158, 70, .92)),
-        #FF8B28;
+        linear-gradient(135deg, rgba(var(--theme-rgb), .98), rgba(var(--theme-rgb), .84)),
+        var(--theme);
       color: #fff;
       border: 2px solid rgba(255,255,255,.9);
-      box-shadow: 0 0 0 3px rgba(255,255,255,.42), 0 22px 58px rgba(255, 139, 40, .28);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.42), 0 22px 58px rgba(var(--theme-rgb), .28);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -779,7 +788,7 @@
       min-height: 64px;
     }
     .heat-head {
-      background: #fff6ee;
+      background: var(--theme-soft);
       color: var(--muted);
       font-size: 11px;
       text-transform: uppercase;
@@ -995,8 +1004,6 @@
       .content { padding: 16px; }
       .grid-4, .grid-3, .grid-2, .form-grid, .dose-output, .stacked-bar, .filter-panel, .reference-grid, .dashboard-metrics, .dashboard-hero, .continue-panel { grid-template-columns: 1fr; }
       .hero-actions { grid-template-columns: 1fr; }
-      .theme-picker { justify-items: start; }
-      .theme-swatches { justify-content: flex-start; }
       .timeline-row { grid-template-columns: 1fr; }
       .item { grid-template-columns: auto 1fr; }
       .item > .actions { grid-column: 2; }
@@ -1039,6 +1046,12 @@
           <span>Internal Medicine</span>
         </div>
       </div>
+      <div class="sidebar-theme">
+        <div class="theme-picker" aria-label="Dashboard background theme">
+          <div class="theme-picker-label">Theme</div>
+          <div class="theme-swatches" id="themeSwatches"></div>
+        </div>
+      </div>
     </aside>
 
     <main class="main">
@@ -1068,10 +1081,6 @@
               <div class="hero-actions">
                 <button class="btn primary" data-jump="patients">Resume case</button>
                 <button class="btn" data-jump="sensitivity">Open antibiogram</button>
-              </div>
-              <div class="theme-picker" aria-label="Dashboard background theme">
-                <div class="theme-picker-label">Dashboard theme</div>
-                <div class="theme-swatches" id="themeSwatches"></div>
               </div>
             </section>
 
@@ -1338,11 +1347,11 @@
     };
 
     const dashboardThemes = {
-      orange: { label: "Orange", color: "#FF8B28" },
-      teal: { label: "Teal", color: "#0E9F8F" },
-      blue: { label: "Blue", color: "#3267A8" },
-      charcoal: { label: "Charcoal", color: "#17231F" },
-      green: { label: "Green", color: "#4F7F38" }
+      orange: { label: "Orange", color: "#FF8B28", rgb: "255, 139, 40", hover: "#ff9c45", soft: "#fff0e2" },
+      teal: { label: "Teal", color: "#0E9F8F", rgb: "14, 159, 143", hover: "#12b8a5", soft: "#e7f7f4" },
+      blue: { label: "Blue", color: "#3267A8", rgb: "50, 103, 168", hover: "#3e79c2", soft: "#e7eef8" },
+      charcoal: { label: "Charcoal", color: "#17231F", rgb: "23, 35, 31", hover: "#24352f", soft: "#eef1f0" },
+      green: { label: "Green", color: "#4F7F38", rgb: "79, 127, 56", hover: "#5f9444", soft: "#e8f1e2" }
     };
 
     const views = {
@@ -1672,6 +1681,10 @@
     function applyDashboardTheme() {
       const theme = dashboardThemes[state.dashboardTheme] || dashboardThemes.orange;
       if (document.documentElement?.style) {
+        document.documentElement.style.setProperty("--theme", theme.color);
+        document.documentElement.style.setProperty("--theme-rgb", theme.rgb);
+        document.documentElement.style.setProperty("--theme-hover", theme.hover);
+        document.documentElement.style.setProperty("--theme-soft", theme.soft);
         document.documentElement.style.setProperty("--bg", theme.color);
       }
     }
