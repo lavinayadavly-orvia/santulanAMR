@@ -900,12 +900,10 @@
           <div class="nav-label">Reference</div>
           <button class="nav-item" data-view="sensitivity"><span class="nav-ico">%</span>State Antibiogram</button>
           <button class="nav-item" data-view="guidelines"><span class="nav-ico">G</span>Guidelines</button>
-          <button class="nav-item" data-view="policies"><span class="nav-ico">R</span>Policies</button>
         </div>
         <div class="nav-block">
           <div class="nav-label">Programme</div>
           <button class="nav-item" data-view="surveillance"><span class="nav-ico">M</span>AMR Surveillance</button>
-          <button class="nav-item" data-view="audit"><span class="nav-ico">A</span>Audit Board</button>
           <button class="nav-item" data-view="learning"><span class="nav-ico">L</span>E-Learning</button>
         </div>
       </nav>
@@ -1109,10 +1107,6 @@
           </div>
         </div>
 
-        <div class="view" id="view-policies">
-          <div class="grid-2" id="policiesGrid"></div>
-        </div>
-
         <div class="view" id="view-surveillance">
           <div class="grid-4" id="surveillanceMetrics"></div>
           <div class="section-title">Programme Signals</div>
@@ -1131,14 +1125,6 @@
           <div class="section-title">Ward-Domain Heatmap</div>
           <div class="panel pad">
             <div class="table-wrap"><div class="heatmap" id="wardHeatmap"></div></div>
-          </div>
-        </div>
-
-        <div class="view" id="view-audit">
-          <div class="grid-4" id="auditMetrics"></div>
-          <div class="section-title">Interventions</div>
-          <div class="panel">
-            <div class="table-wrap"><table><thead><tr><th>Date</th><th>Ward</th><th>Issue</th><th>Recommendation</th><th>Acceptance</th><th>Impact</th></tr></thead><tbody id="auditBody"></tbody></table></div>
           </div>
         </div>
 
@@ -1187,9 +1173,7 @@
       patients: ["Case Studies", "Curated patient journeys for stewardship training"],
       sensitivity: ["State Antibiogram & Sensitivity", "Aggregate organism-drug susceptibility from uploaded state data"],
       guidelines: ["Guidelines", "Syndrome-based treatment guidance"],
-      policies: ["Policies", "Restricted antibiotic and prophylaxis policies"],
       surveillance: ["AMR Surveillance", "Risk domains, ward heatmap, and culture-to-action signals"],
-      audit: ["Audit Board", "Stewardship interventions and programme metrics"],
       learning: ["E-Learning", "CME modules for antimicrobial stewardship"]
     };
 
@@ -1408,14 +1392,6 @@
       { source: "Local", group: "surgery", title: "Surgical prophylaxis", badge: "Surgery", body: "Give prophylaxis within the approved pre-incision window, redose only when indicated by policy, and stop within protocol duration unless treatment is indicated.", referenceKey: "default" }
     ];
 
-    const policies = [
-      ["Restricted antibiotics", "Approval required", "Carbapenems, colistin, polymyxin B, tigecycline, IV vancomycin, linezolid and newer beta-lactam/beta-lactamase inhibitor combinations require documented indication and review date."],
-      ["De-escalation policy", "Mandatory", "Broad-spectrum therapy must be reviewed at 48-72 hours with cultures, clinical response, source control, and stop or switch plan documented."],
-      ["Antibiotic hopping policy", "Mandatory", "Changing from one antibiotic to another within 48 hours requires a documented reason: culture result, clinical deterioration, allergy/toxicity, source-control finding, wrong syndrome, or approved escalation pathway."],
-      ["Surgical prophylaxis", "Protocol", "Cefazolin-based prophylaxis is preferred for many clean procedures. Continue beyond 24 hours only when the surgical policy explicitly allows it."],
-      ["IV to oral switch", "Preferred", "Switch when afebrile, hemodynamically stable, improving clinically, tolerating oral intake, and no contraindication to oral therapy exists."]
-    ];
-
     const demoPatients = [
       ["CASE-01", "ICU", "Sepsis - unknown source", "CRE/ESBL risk, escalation and de-escalation", "Culture final", "Advanced"],
       ["CASE-02", "Medicine ward", "Community-acquired pneumonia", "Empirical choice, atypical cover, IV-to-oral switch", "48-hour review", "Core"],
@@ -1476,13 +1452,6 @@
       ["Pediatrics", ["stable", "stable", "watch", "stable"], ["Low MDR signal", "Access preferred", "Dose check", "Review current"]]
     ];
 
-    const auditRows = [
-      ["May 31", "ICU", "Meropenem continuation after culture final", "De-escalate to piperacillin-tazobactam", "Accepted", "Watch antibiotic days avoided"],
-      ["May 30", "Surgery", "Prophylaxis continued beyond 48 h", "Stop cefazolin", "Accepted", "2 DOT avoided"],
-      ["May 29", "Medicine", "Uncomplicated UTI on ceftriaxone", "Switch to nitrofurantoin", "Partial", "IV-to-oral conversion"],
-      ["May 28", "ICU", "Vancomycin without MRSA risk", "Stop MRSA cover", "Accepted", "TDM avoided"]
-    ];
-
     const modules = [
       ["Stewardship foundations", "Core principles, governance, audit cycles, and practical ward workflows.", 100, "CME"],
       ["Interpreting antibiograms", "Breakpoints, isolate counts, syndrome relevance, and empirical therapy selection.", 60, "Skill"],
@@ -1519,12 +1488,6 @@
 
     function renderMetrics() {
       $("metrics").innerHTML = metrics.map(m => `<div class="metric"><div class="label">${m[0]}</div><div class="value">${m[1]}</div><div class="trend ${m[3]}">${m[2]}</div></div>`).join("");
-      $("auditMetrics").innerHTML = [
-        ["Acceptance", "76%", "Accepted or partially accepted", "good"],
-        ["DOT avoided", "184", "Month to date", "good"],
-        ["Restricted use scenarios", "31", "Training examples in library", "warn"],
-        ["Avg review time", "54 h", "Target: under 72 h", "good"]
-      ].map(m => `<div class="metric"><div class="label">${m[0]}</div><div class="value">${m[1]}</div><div class="trend ${m[3]}">${m[2]}</div></div>`).join("");
     }
 
     function renderDashboard() {
@@ -1815,10 +1778,6 @@
       }).join("") || `<div class="empty">No guidelines match the current filter.</div>`;
     }
 
-    function renderPolicies() {
-      $("policiesGrid").innerHTML = policies.map(p => `<div class="panel pad"><div class="actions" style="justify-content:space-between;"><div class="panel-title">${p[0]}</div><span class="badge ${p[1] === "Mandatory" ? "red" : p[1] === "Preferred" ? "green" : "blue"}">${p[1]}</span></div><div class="panel-sub" style="font-size:13px; margin-top:12px;">${p[2]}</div></div>`).join("");
-    }
-
     function renderSurveillance() {
       const restrictedStarts = surveillanceDomains.reduce((sum, row) => sum + row[1], 0);
       const reviewOverdue = surveillanceDomains.reduce((sum, row) => sum + row[2], 0);
@@ -1849,10 +1808,6 @@
         wardDomainHeat.map(row => `<div class="heat-label"><strong>${row[0]}</strong><span>State teaching slice</span></div>${row[1].map((level, i) => `<div class="heat-cell" data-level="${level}"><strong>${level.toUpperCase()}</strong><span>${row[2][i]}</span></div>`).join("")}`).join("");
     }
 
-    function renderAudit() {
-      $("auditBody").innerHTML = auditRows.filter(r => matchesSearch(r.join(" "))).map(r => `<tr>${r.map((c, i) => `<td>${i === 4 ? `<span class="badge ${c === "Accepted" ? "green" : "amber"}">${c}</span>` : c}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="6"><div class="empty">No matching audit rows.</div></td></tr>`;
-    }
-
     function renderLearning() {
       const rows = modules.map((m, i) => ({ row: m, index: i })).filter(m => matchesSearch(m.row.join(" ")));
       $("learningGrid").innerHTML = rows.map(({ row: m, index }) => `<button class="module-card module-button" data-module="${index}"><div class="module-top"><div class="module-icon">${index + 1}</div><span class="badge ${m[3] === "CME" ? "green" : "blue"}">${m[3]}</span></div><div class="module-title">${m[0]}</div><div class="module-desc">${m[1]}</div><div class="progress"><span style="width:${m[2]}%"></span></div><div class="item-meta">${m[2]}% complete</div></button>`).join("") || `<div class="empty">No learning modules match the search.</div>`;
@@ -1873,9 +1828,7 @@
       renderPatients();
       renderSensitivity();
       renderGuidelines();
-      renderPolicies();
       renderSurveillance();
-      renderAudit();
       renderLearning();
     }
 

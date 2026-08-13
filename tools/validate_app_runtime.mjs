@@ -110,9 +110,8 @@ if (!matrix || !matrix.includes("sensitivity-cell")) {
 const requiredOutputs = [
   ["alertsList", "data-alert"],
   ["doseSafetyChecklist", "Confirm indication"],
-  ["policiesGrid", "Antibiotic hopping policy"],
   ["surveillanceMetrics", "Restricted starts"],
-  ["auditBody", "Accepted"],
+  ["learningGrid", "Antibiotic hopping in OPD practice"],
 ];
 for (const [id, expected] of requiredOutputs) {
   if (!element(id).innerHTML.includes(expected)) {
