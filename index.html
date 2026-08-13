@@ -260,6 +260,40 @@
       gap: 10px;
       align-items: center;
     }
+    .theme-picker {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+    }
+    .theme-picker-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .theme-swatches {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .theme-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px var(--line-strong);
+      cursor: pointer;
+      padding: 0;
+    }
+    .theme-swatch.active {
+      box-shadow: 0 0 0 3px rgba(255, 139, 40, .36), 0 6px 16px rgba(23, 35, 31, .12);
+    }
+    .theme-swatch:focus-visible {
+      outline: 3px solid rgba(23, 35, 31, .22);
+      outline-offset: 2px;
+    }
     .dashboard-metrics {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -961,6 +995,8 @@
       .content { padding: 16px; }
       .grid-4, .grid-3, .grid-2, .form-grid, .dose-output, .stacked-bar, .filter-panel, .reference-grid, .dashboard-metrics, .dashboard-hero, .continue-panel { grid-template-columns: 1fr; }
       .hero-actions { grid-template-columns: 1fr; }
+      .theme-picker { justify-items: start; }
+      .theme-swatches { justify-content: flex-start; }
       .timeline-row { grid-template-columns: 1fr; }
       .item { grid-template-columns: auto 1fr; }
       .item > .actions { grid-column: 2; }
@@ -1032,6 +1068,10 @@
               <div class="hero-actions">
                 <button class="btn primary" data-jump="patients">Resume case</button>
                 <button class="btn" data-jump="sensitivity">Open antibiogram</button>
+              </div>
+              <div class="theme-picker" aria-label="Dashboard background theme">
+                <div class="theme-picker-label">Dashboard theme</div>
+                <div class="theme-swatches" id="themeSwatches"></div>
               </div>
             </section>
 
@@ -1285,6 +1325,7 @@
       view: "dashboard",
       guidelineFilter: "all",
       search: "",
+      dashboardTheme: localStorage.getItem("santulanAmrDashboardTheme") || "orange",
       patients: [],
       sensitivity: {
         source: "All",
@@ -1294,6 +1335,14 @@
         antibiotic: "All",
         specimen: "All"
       }
+    };
+
+    const dashboardThemes = {
+      orange: { label: "Orange", color: "#FF8B28" },
+      teal: { label: "Teal", color: "#0E9F8F" },
+      blue: { label: "Blue", color: "#3267A8" },
+      charcoal: { label: "Charcoal", color: "#17231F" },
+      green: { label: "Green", color: "#4F7F38" }
     };
 
     const views = {
@@ -1620,7 +1669,22 @@
       $("metrics").innerHTML = metrics.map(m => `<div class="metric"><div class="label">${m[0]}</div><div class="value">${m[1]}</div><div class="trend ${m[3]}">${m[2]}</div></div>`).join("");
     }
 
+    function applyDashboardTheme() {
+      const theme = dashboardThemes[state.dashboardTheme] || dashboardThemes.orange;
+      if (document.documentElement?.style) {
+        document.documentElement.style.setProperty("--bg", theme.color);
+      }
+    }
+
+    function renderThemeSwatches() {
+      $("themeSwatches").innerHTML = Object.entries(dashboardThemes).map(([key, theme]) => (
+        `<button class="theme-swatch ${state.dashboardTheme === key ? "active" : ""}" data-theme="${key}" style="background:${theme.color}" aria-label="Use ${theme.label} dashboard theme" title="${theme.label}"></button>`
+      )).join("");
+    }
+
     function renderDashboard() {
+      applyDashboardTheme();
+      renderThemeSwatches();
       $("alertsList").innerHTML = alerts.map((a, i) => ({ row: a, index: i })).filter(a => matchesSearch(a.row.join(" "))).map(a => `<button class="item item-button" data-alert="${a.index}"><span class="dot ${a.row[0]}"></span><div><div class="item-title">${a.row[1]}</div><div class="item-meta">${a.row[2]}</div></div><span class="badge neutral">Open</span></button>`).join("") || `<div class="empty">No matching alerts.</div>`;
       $("todayTimeline").innerHTML = timeline.map(t => `<div class="timeline-row"><div class="time">${t[0]}</div><div><div class="item-title">${t[1]}</div><div class="item-meta">${t[2]}</div></div></div>`).join("");
     }
@@ -2033,6 +2097,15 @@
       $("exportCasesBtn").addEventListener("click", exportReviewCases);
       $("seedCasesBtn").addEventListener("click", () => { state.patients = demoPatients.slice(); savePatients(); renderPatients(); $("reviewBadge").textContent = state.patients.length; toast("Curated cases restored."); });
       $("globalSearch").addEventListener("input", e => { state.search = norm(e.target.value); render(); });
+      $("themeSwatches").addEventListener("click", e => {
+        const swatch = e.target.closest("[data-theme]");
+        if (!swatch) return;
+        state.dashboardTheme = swatch.dataset.theme;
+        localStorage.setItem("santulanAmrDashboardTheme", state.dashboardTheme);
+        applyDashboardTheme();
+        renderThemeSwatches();
+        toast(`${dashboardThemes[state.dashboardTheme].label} dashboard theme applied.`);
+      });
       ["sensDrug", "sensState", "sensYear", "sensOrganism", "sensSpecimen"].forEach(id => {
         const el = $(id);
         if (!el) return;
