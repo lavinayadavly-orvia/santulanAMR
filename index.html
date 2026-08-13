@@ -913,11 +913,16 @@
         </div>
 
         <div class="view" id="view-guidelines">
+          <div class="grid-3" style="margin-bottom:14px;">
+            <div class="metric"><div class="label">Source Hierarchy</div><div class="value" style="font-size:18px;">Local -> ICMR -> WHO -> IDSA</div><div class="trend good">Use local approved policy first</div></div>
+            <div class="metric"><div class="label">Every Guideline Card Shows</div><div class="value" style="font-size:18px;">Pathway + Section</div><div class="trend warn">Open for rationale, checks, and links</div></div>
+            <div class="metric"><div class="label">Training Focus</div><div class="value" style="font-size:18px;">Misuse Correction</div><div class="trend risk">Antibiotic hopping and early stopping</div></div>
+          </div>
           <div class="panel">
             <div class="panel-head">
               <div>
-                <div class="panel-title">Treatment Guidelines</div>
-                <div class="panel-sub">Searchable local guideline library for common syndromes.</div>
+                <div class="panel-title">Guideline Reference Navigator</div>
+                <div class="panel-sub">Each item shows what guideline applies, which section/pathway to read, why it matters, and where to open the official source.</div>
               </div>
               <div class="segmented" id="guidelineFilters"></div>
             </div>
@@ -1627,7 +1632,7 @@
       const rows = guidelines.map((g, i) => ({ ...g, index: i })).filter(g => (state.guidelineFilter === "all" || g.group === state.guidelineFilter) && matchesSearch(g.title + g.body + g.source));
       $("guidelinesList").innerHTML = rows.map(g => {
         const ref = guidelineReferenceFor(g.referenceKey);
-        return `<div class="item"><span class="dot"></span><div><div class="item-title">${g.title}</div><div class="item-meta">${g.body}</div><div class="item-meta" style="margin-top:6px;"><b>Where in guidance:</b> ${ref.section}</div><div style="margin-top:8px;"><span class="badge">${g.source}</span> <span class="badge blue">${g.badge}</span></div></div><button class="btn" data-guideline="${g.index}">Open</button></div>`;
+        return `<div class="item"><span class="dot"></span><div><div class="item-title">${g.title}</div><div class="item-meta">${g.body}</div><div class="item-meta" style="margin-top:6px;"><b>Guideline pathway:</b> ${ref.pathway}</div><div class="item-meta" style="margin-top:6px;"><b>Where in guidance:</b> ${ref.section}</div><div style="margin-top:8px;"><span class="badge">${g.source}</span> <span class="badge blue">${g.badge}</span></div></div><button class="btn" data-guideline="${g.index}">Open source navigator</button></div>`;
       }).join("") || `<div class="empty">No guidelines match the current filter.</div>`;
     }
 
