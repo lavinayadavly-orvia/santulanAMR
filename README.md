@@ -20,6 +20,7 @@ Use these Pages settings:
 - Build output directory: `dist`
 - Root directory: repository root
 - Environment variables: none required
+- Deploy command: leave blank for normal Pages Git deployments. If Cloudflare asks for one, use `npm run deploy`.
 
 The build intentionally excludes workbook inspection files and development tools from production output. Only deploy-ready static assets are copied into `dist/`.
 
@@ -32,3 +33,5 @@ npm run deploy:cloudflare
 ```
 
 This runs validation, builds `dist/`, and deploys `dist` to the `santulanamr` Pages project.
+
+Do not use `npx wrangler deploy` for this Pages project unless Cloudflare is configured to deploy Worker static assets. The Pages command is `wrangler pages deploy dist`.

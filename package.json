@@ -6,6 +6,7 @@
   "scripts": {
     "validate": "node tools/validate_app_runtime.mjs",
     "build": "npm run validate && node tools/build_site.mjs",
+    "deploy": "npm run build && npx wrangler pages deploy dist --project-name santulanamr",
     "deploy:cloudflare": "npm run build && npx wrangler pages deploy dist --project-name santulanamr"
   }
 }
