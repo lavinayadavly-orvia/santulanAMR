@@ -7,6 +7,7 @@ const dist = path.join(root, "dist");
 const files = [
   ["index.html", "index.html"],
   ["_headers", "_headers"],
+  ["assets/logo.svg", "assets/logo.svg"],
   ["data/sensitivity_data.js", "data/sensitivity_data.js"],
   ["data/sensitivity_data.json", "data/sensitivity_data.json"]
 ];
