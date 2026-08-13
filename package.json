@@ -1,0 +1,11 @@
+{
+  "name": "santulanamr",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SantulanAMR stewardship education and state antibiogram reference app.",
+  "scripts": {
+    "validate": "node tools/validate_app_runtime.mjs",
+    "build": "npm run validate && node tools/build_site.mjs",
+    "deploy:cloudflare": "npm run build && npx wrangler pages deploy dist --project-name santulanamr"
+  }
+}

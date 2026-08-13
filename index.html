@@ -1,0 +1,1826 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SantulanAMR - Antimicrobial Stewardship App</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --panel-2: #eef4f3;
+      --ink: #142422;
+      --muted: #60736f;
+      --faint: #8a9a96;
+      --line: #dbe5e2;
+      --line-strong: #c3d1cd;
+      --teal: #16836a;
+      --teal-dark: #0e5d4d;
+      --teal-soft: #dff3ee;
+      --blue: #276fbf;
+      --blue-soft: #e5f0fb;
+      --amber: #a86712;
+      --amber-soft: #f7ead6;
+      --red: #c9452b;
+      --red-soft: #f9e8e4;
+      --purple: #665cc7;
+      --purple-soft: #eceafd;
+      --green: #4f8121;
+      --green-soft: #e8f2df;
+      --shadow: 0 18px 50px rgba(24, 42, 39, 0.08);
+      --radius: 8px;
+      --nav: 260px;
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { border: 0; }
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--nav) 1fr;
+    }
+    .sidebar {
+      background: #fbfcfd;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+    .brand {
+      padding: 22px 20px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--teal);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      letter-spacing: 0;
+      box-shadow: inset 0 -10px 20px rgba(0,0,0,0.08);
+    }
+    .brand-title { font-size: 17px; font-weight: 750; letter-spacing: 0; }
+    .brand-sub { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+    .nav-block { padding: 16px 12px 0; }
+    .nav-label {
+      color: var(--faint);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 0 10px 8px;
+      font-weight: 700;
+    }
+    .nav-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 38px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      text-align: left;
+      margin-bottom: 3px;
+    }
+    .nav-item:hover { background: var(--panel-2); color: var(--ink); }
+    .nav-item.active { background: var(--teal-soft); color: var(--teal-dark); font-weight: 720; }
+    .nav-ico {
+      width: 22px;
+      height: 22px;
+      border: 1px solid currentColor;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      flex: 0 0 auto;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 20px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+    .badge.blue { background: var(--blue-soft); color: var(--blue); }
+    .badge.amber { background: var(--amber-soft); color: var(--amber); }
+    .badge.red { background: var(--red-soft); color: var(--red); }
+    .badge.purple { background: var(--purple-soft); color: var(--purple); }
+    .badge.green { background: var(--green-soft); color: var(--green); }
+    .badge.neutral { background: #eef1f3; color: #56625f; }
+    .nav-item .badge { margin-left: auto; }
+    .persona {
+      margin-top: auto;
+      padding: 16px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--teal-soft);
+      color: var(--teal-dark);
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      flex: 0 0 auto;
+    }
+    .persona strong { display: block; font-size: 13px; }
+    .persona span { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+    .main { min-width: 0; }
+    .topbar {
+      height: 74px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(246, 248, 251, .92);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 26px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .mobile-menu { display: none; }
+    .title-wrap { min-width: 150px; flex: 1; }
+    .top-title { font-size: 21px; font-weight: 800; letter-spacing: 0; }
+    .top-sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .global-search {
+      width: min(430px, 42vw);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 12px;
+      box-shadow: 0 8px 24px rgba(20, 36, 34, .04);
+    }
+    .global-search input {
+      border: 0;
+      outline: 0;
+      min-width: 0;
+      width: 100%;
+      background: transparent;
+      color: var(--ink);
+    }
+    .content { padding: 26px; max-width: 1460px; margin: 0 auto; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .wide-layout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(320px, .75fr); gap: 14px; align-items: start; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .panel.pad { padding: 18px; }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-title { font-weight: 800; font-size: 14px; }
+    .panel-sub { color: var(--muted); font-size: 12px; margin-top: 3px; line-height: 1.45; }
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      min-height: 116px;
+      box-shadow: var(--shadow);
+    }
+    .metric .label { color: var(--muted); font-size: 12px; }
+    .metric .value { font-size: 29px; font-weight: 830; margin-top: 6px; letter-spacing: 0; }
+    .metric .trend { color: var(--muted); font-size: 12px; margin-top: 7px; }
+    .trend.good { color: var(--green); }
+    .trend.warn { color: var(--amber); }
+    .trend.risk { color: var(--red); }
+    .section-title { font-size: 16px; font-weight: 820; margin: 26px 0 12px; }
+    .list { padding: 8px 18px 14px; }
+    .item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+    .item-button {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
+    .item-button:hover .item-title { color: var(--teal-dark); }
+    .item:last-child { border-bottom: 0; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 6px; background: var(--teal); }
+    .dot.red { background: var(--red); }
+    .dot.amber { background: var(--amber); }
+    .dot.blue { background: var(--blue); }
+    .item-title { font-weight: 750; font-size: 13px; line-height: 1.35; }
+    .item-meta { color: var(--muted); font-size: 12px; margin-top: 4px; line-height: 1.45; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 720;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--panel-2); }
+    .btn.primary { background: var(--teal); border-color: var(--teal); color: #fff; }
+    .btn.primary:hover { background: var(--teal-dark); }
+    .btn.danger { color: var(--red); border-color: #e3bbb3; }
+    .icon-btn {
+      width: 36px;
+      min-width: 36px;
+      padding: 0;
+      font-weight: 900;
+    }
+    .segmented {
+      display: inline-flex;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
+      flex-wrap: wrap;
+    }
+    .segmented button {
+      min-height: 30px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 720;
+      font-size: 12px;
+    }
+    .segmented button.active { background: #fff; color: var(--teal-dark); box-shadow: 0 2px 8px rgba(20, 36, 34, .08); }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    label { color: var(--muted); font-size: 12px; font-weight: 700; }
+    input, select, textarea {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 10px;
+      outline: 0;
+    }
+    textarea { min-height: 86px; resize: vertical; line-height: 1.45; }
+    input:focus, select:focus, textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(22, 131, 106, .13); }
+    .full { grid-column: 1 / -1; }
+    .result-box {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--teal);
+      background: #f4fbf9;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-top: 16px;
+      display: none;
+    }
+    .result-box.visible { display: block; }
+    .result-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-weight: 830; color: var(--teal-dark); margin-bottom: 12px; }
+    .rec-line {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 8px;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 8px 0;
+    }
+    .rec-line b { color: #10211f; }
+    .rec-ico { color: var(--teal); font-weight: 900; text-align: center; }
+    .disclaimer {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      margin-top: 12px;
+    }
+    .table-wrap { overflow: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 720px; }
+    th {
+      text-align: left;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      background: #f8fafb;
+      border-bottom: 1px solid var(--line);
+      padding: 11px 12px;
+      white-space: nowrap;
+    }
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 11px 12px;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: 0; }
+    tbody tr:hover td { background: #fbfdfd; }
+    .sens {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      min-height: 22px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 850;
+    }
+    .sens.s { background: var(--green-soft); color: var(--green); }
+    .sens.i { background: var(--amber-soft); color: var(--amber); }
+    .sens.r { background: var(--red-soft); color: var(--red); }
+    .sens.na { background: #edf1f2; color: var(--faint); }
+    .module-card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      min-height: 194px;
+    }
+    .module-card:hover { border-color: var(--teal); }
+    .module-button {
+      width: 100%;
+      color: inherit;
+      text-align: left;
+    }
+    .module-top { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+    .module-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 900;
+    }
+    .module-title { font-weight: 800; margin-top: 12px; line-height: 1.3; }
+    .module-desc { color: var(--muted); font-size: 12px; margin-top: 6px; line-height: 1.45; flex: 1; }
+    .progress { height: 7px; border-radius: 999px; background: #e8eeee; overflow: hidden; margin-top: 12px; }
+    .progress span { display: block; height: 100%; background: var(--teal); border-radius: inherit; }
+    .dose-output { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .dose-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 80px;
+    }
+    .dose-value { color: var(--blue); font-size: 20px; font-weight: 850; }
+    .dose-label { color: var(--muted); font-size: 11px; margin-top: 4px; }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .info-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .info-chip strong { color: var(--ink); }
+    .stacked-bar {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .stack-segment {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfdfd;
+      min-height: 108px;
+    }
+    .stack-segment[data-tier="High"] { background: var(--red-soft); border-color: #e8bdb6; }
+    .stack-segment[data-tier="Watch"] { background: var(--amber-soft); border-color: #ead2aa; }
+    .stack-segment[data-tier="Stable"] { background: var(--green-soft); border-color: #cfe2bf; }
+    .stack-segment h3 { margin: 0; font-size: 13px; }
+    .stack-value { font-size: 30px; font-weight: 850; margin-top: 6px; }
+    .stack-meta { color: var(--muted); font-size: 12px; margin-top: 5px; line-height: 1.35; }
+    .heatmap {
+      display: grid;
+      grid-template-columns: minmax(112px, .75fr) repeat(4, minmax(120px, 1fr));
+      gap: 8px;
+      min-width: 720px;
+    }
+    .heat-head,
+    .heat-label,
+    .heat-cell {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 64px;
+    }
+    .heat-head {
+      background: #f8fafb;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-weight: 800;
+    }
+    .heat-label { background: #fff; }
+    .heat-label strong,
+    .heat-cell strong { display: block; font-size: 13px; }
+    .heat-label span,
+    .heat-cell span { display: block; color: var(--muted); font-size: 11px; margin-top: 4px; line-height: 1.35; }
+    .heat-cell[data-level="high"] { background: var(--red-soft); border-color: #e8bdb6; }
+    .heat-cell[data-level="watch"] { background: var(--amber-soft); border-color: #ead2aa; }
+    .heat-cell[data-level="stable"] { background: var(--green-soft); border-color: #cfe2bf; }
+    .mini-chart {
+      height: 120px;
+      display: flex;
+      align-items: end;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdfd;
+      margin-top: 12px;
+    }
+    .mini-bar {
+      flex: 1;
+      min-width: 22px;
+      border-radius: 6px 6px 0 0;
+      background: var(--teal);
+      position: relative;
+    }
+    .mini-bar[data-level="high"] { background: var(--red); }
+    .mini-bar[data-level="watch"] { background: var(--amber); }
+    .mini-bar span {
+      position: absolute;
+      left: 50%;
+      bottom: -22px;
+      transform: translateX(-50%);
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+    .filter-panel {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+    .sensitivity-cell {
+      min-width: 96px;
+      border-radius: 8px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      font-weight: 850;
+      text-align: center;
+    }
+    .sensitivity-cell small {
+      display: block;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 3px;
+    }
+    .sensitivity-cell[data-tone="good"] { background: var(--green-soft); color: var(--green); border-color: #cfe2bf; }
+    .sensitivity-cell[data-tone="watch"] { background: var(--amber-soft); color: var(--amber); border-color: #ead2aa; }
+    .sensitivity-cell[data-tone="risk"] { background: var(--red-soft); color: var(--red); border-color: #e8bdb6; }
+    .therapy-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+    }
+    .therapy-card-top {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .therapy-name { font-weight: 820; line-height: 1.3; }
+    .bar-track {
+      height: 9px;
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+      background: #edf1f2;
+    }
+    .bar-s { background: var(--green); }
+    .bar-i { background: var(--amber); }
+    .bar-r { background: var(--red); }
+    .reference-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .reference-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 12px;
+    }
+    .reference-card h4 {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .reference-card p {
+      margin: 6px 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .reference-card a {
+      color: var(--teal-dark);
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .timeline { padding: 4px 18px 18px; }
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 12px;
+      border-left: 2px solid var(--line);
+      margin-left: 8px;
+      padding: 13px 0 13px 18px;
+      position: relative;
+    }
+    .timeline-row:before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      position: absolute;
+      left: -6px;
+      top: 18px;
+    }
+    .time { color: var(--muted); font-size: 12px; font-weight: 760; }
+    .hidden { display: none !important; }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 24, 22, .46);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 50;
+    }
+    .modal-backdrop.visible { display: flex; }
+    .modal {
+      width: min(760px, 100%);
+      max-height: min(760px, 90vh);
+      overflow: auto;
+      background: var(--panel);
+      border-radius: 10px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.24);
+      border: 1px solid var(--line);
+    }
+    .modal-body { padding: 18px; }
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #10211f;
+      color: #fff;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.2);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: .18s ease;
+      z-index: 80;
+    }
+    .toast.visible { opacity: 1; transform: translateY(0); }
+    .empty {
+      padding: 28px;
+      color: var(--muted);
+      text-align: center;
+      border: 1px dashed var(--line-strong);
+      border-radius: 8px;
+      background: #fbfdfd;
+    }
+    @media (max-width: 1100px) {
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .wide-layout { grid-template-columns: 1fr; }
+      .global-search { width: min(360px, 36vw); }
+    }
+    @media (max-width: 760px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: fixed;
+        z-index: 30;
+        width: min(86vw, 320px);
+        transform: translateX(-102%);
+        transition: transform .2s ease;
+        box-shadow: 18px 0 60px rgba(12, 25, 23, .18);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .mobile-menu { display: inline-flex; }
+      .topbar { height: auto; min-height: 68px; flex-wrap: wrap; padding: 12px 14px; }
+      .global-search { width: 100%; order: 3; }
+      .content { padding: 16px; }
+      .grid-4, .grid-3, .grid-2, .form-grid, .dose-output, .stacked-bar, .filter-panel, .reference-grid { grid-template-columns: 1fr; }
+      .timeline-row { grid-template-columns: 1fr; }
+      .item { grid-template-columns: auto 1fr; }
+      .item > .actions { grid-column: 2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">AM</div>
+        <div>
+          <div class="brand-title">SantulanAMR</div>
+          <div class="brand-sub">Stewardship cockpit</div>
+        </div>
+      </div>
+      <nav>
+        <div class="nav-block">
+          <div class="nav-label">Clinical</div>
+          <button class="nav-item active" data-view="dashboard"><span class="nav-ico">D</span>Dashboard</button>
+          <button class="nav-item" data-view="recommend"><span class="nav-ico">GL</span>Guideline Recommendation</button>
+          <button class="nav-item" data-view="dose"><span class="nav-ico">Rx</span>Dosing Safety</button>
+          <button class="nav-item" data-view="patients"><span class="nav-ico">CS</span>Case Studies <span class="badge amber" id="reviewBadge">5</span></button>
+        </div>
+        <div class="nav-block">
+          <div class="nav-label">Reference</div>
+          <button class="nav-item" data-view="sensitivity"><span class="nav-ico">%</span>State Antibiogram</button>
+          <button class="nav-item" data-view="guidelines"><span class="nav-ico">G</span>Guidelines</button>
+          <button class="nav-item" data-view="policies"><span class="nav-ico">R</span>Policies</button>
+        </div>
+        <div class="nav-block">
+          <div class="nav-label">Programme</div>
+          <button class="nav-item" data-view="surveillance"><span class="nav-ico">M</span>AMR Surveillance</button>
+          <button class="nav-item" data-view="audit"><span class="nav-ico">A</span>Audit Board</button>
+          <button class="nav-item" data-view="learning"><span class="nav-ico">L</span>E-Learning</button>
+        </div>
+      </nav>
+      <div class="persona">
+        <div class="avatar">DR</div>
+        <div>
+          <strong>Dr. Rajan Mehta</strong>
+          <span>Internal Medicine</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="btn icon-btn mobile-menu" id="menuBtn" aria-label="Open navigation">=</button>
+        <div class="title-wrap">
+          <div class="top-title" id="viewTitle">Dashboard</div>
+          <div class="top-sub" id="viewSub">Institutional antimicrobial stewardship overview</div>
+        </div>
+        <div class="global-search" role="search">
+          <span aria-hidden="true">Search</span>
+          <input id="globalSearch" type="search" placeholder="drug, organism, condition, case">
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="view active" id="view-dashboard">
+          <div class="chip-row">
+            <span class="info-chip"><strong>Purpose</strong> Guidance and doctor training</span>
+            <span class="info-chip"><strong>Cases</strong> Curated educational journeys</span>
+            <span class="info-chip"><strong>Antibiogram</strong> State-provided AMR data</span>
+            <span class="info-chip"><strong>Network</strong> No third-party scripts</span>
+          </div>
+          <div class="grid-4" id="metrics"></div>
+          <div class="wide-layout section-title-wrap">
+            <div>
+              <div class="section-title">Stewardship Alerts</div>
+              <div class="panel">
+                <div class="list" id="alertsList"></div>
+              </div>
+            </div>
+            <div>
+              <div class="section-title">Quick Actions</div>
+              <div class="panel pad">
+                <div class="actions" style="display:grid; gap:10px;">
+                  <button class="btn primary" data-jump="recommend">New guideline recommendation</button>
+                  <button class="btn" data-jump="dose">Review dosing safety principles</button>
+                  <button class="btn" data-jump="sensitivity">Open state antibiogram</button>
+                  <button class="btn" data-jump="patients">Study case journeys</button>
+                </div>
+              </div>
+              <div class="section-title">Today</div>
+              <div class="panel">
+                <div class="timeline" id="todayTimeline"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="view" id="view-recommend">
+          <div class="wide-layout">
+            <div class="panel pad">
+              <div class="panel-title">Guideline-Driven Recommendation</div>
+              <div class="panel-sub">Generate a structured stewardship recommendation from institutional policy, ICMR guidance, WHO AWaRe principles, and syndrome-specific guideline rules.</div>
+              <div class="form-grid" style="margin-top:16px;">
+                <div class="field"><label for="age">Age</label><input id="age" type="number" min="0" placeholder="45"></div>
+                <div class="field"><label for="sex">Sex</label><select id="sex"><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option></select></div>
+                <div class="field"><label for="weight">Weight (kg)</label><input id="weight" type="number" min="1" placeholder="65"></div>
+                <div class="field"><label for="egfr">eGFR (mL/min/1.73m2)</label><input id="egfr" type="number" min="0" placeholder="75"></div>
+                <div class="field full"><label for="diagnosis">Suspected infection</label><select id="diagnosis"></select></div>
+                <div class="field"><label for="setting">Setting</label><select id="setting"><option>Community-acquired</option><option>Hospital-acquired</option><option>Healthcare-associated</option><option>ICU</option></select></div>
+                <div class="field"><label for="severity">Severity</label><select id="severity"><option>Mild</option><option>Moderate</option><option>Severe</option><option>Critical</option></select></div>
+                <div class="field full"><label for="allergy">Allergies or contraindications</label><input id="allergy" placeholder="Penicillin allergy, CKD, pregnancy, QT risk"></div>
+                <div class="field full"><label for="notes">Clinical notes</label><textarea id="notes" placeholder="Cultures pending, prior ESBL, recent admission, indwelling catheter, shock, source control status"></textarea></div>
+              </div>
+              <div class="actions" style="margin-top:16px;">
+                <button class="btn primary" id="recommendBtn">Generate guideline recommendation</button>
+                <button class="btn" id="openCaseLibraryBtn">Open related case studies</button>
+                <button class="btn" id="clearRecBtn">Clear</button>
+              </div>
+              <div class="result-box" id="recommendResult"></div>
+            </div>
+
+            <aside class="panel">
+              <div class="panel-head">
+                <div>
+                  <div class="panel-title">Context Signals</div>
+                  <div class="panel-sub">Local resistance and prescribing cues</div>
+                </div>
+              </div>
+              <div class="list" id="contextSignals"></div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="view" id="view-dose">
+          <div class="grid-2">
+            <div class="panel pad">
+              <div class="panel-title">Dosing Appropriateness Review</div>
+              <div class="panel-sub">Use this to identify dosing risk factors, monitoring needs, and the correct dosing reference. It does not generate a numeric dose or interval.</div>
+              <div class="form-grid" style="margin-top:16px;">
+                <div class="field"><label for="doseDrug">Drug or therapy</label><select id="doseDrug"></select></div>
+                <div class="field"><label for="doseSyndrome">Syndrome</label><select id="doseSyndrome"></select></div>
+                <div class="field"><label for="doseEgfr">eGFR / CrCl band</label><select id="doseEgfr"><option>Not entered</option><option>Normal or mildly reduced</option><option>30-59</option><option>15-29</option><option>&lt;15</option><option>Dialysis / RRT</option></select></div>
+                <div class="field"><label for="doseWeight">Weight context</label><select id="doseWeight"><option>Standard adult</option><option>Low body weight</option><option>Obesity / high body weight</option><option>Pediatric</option><option>Pregnancy</option></select></div>
+                <div class="field"><label for="doseSeverity">Clinical context</label><select id="doseSeverity"><option>OPD / mild</option><option>Admitted / moderate</option><option>ICU / severe</option><option>Sepsis or shock</option><option>Prophylaxis</option></select></div>
+                <div class="field"><label for="doseCulture">Culture status</label><select id="doseCulture"><option>Pending</option><option>Known susceptible</option><option>Known resistant / MDR risk</option><option>Not indicated</option></select></div>
+              </div>
+              <div class="actions" style="margin-top:16px;">
+                <button class="btn primary" id="doseReviewBtn">Review dosing checks</button>
+                <button class="btn" id="doseClearBtn">Clear</button>
+              </div>
+              <div class="result-box" id="doseReviewResult"></div>
+            </div>
+            <div class="panel pad">
+              <div class="panel-title">Core Safety Checklist</div>
+              <div class="panel-sub">Checks that should be completed before using the local formulary or prescribing system.</div>
+              <div class="list" id="doseSafetyChecklist" style="padding-left:0; padding-right:0;"></div>
+            </div>
+            <div class="panel" style="grid-column:1 / -1;">
+              <div class="panel-head">
+                <div>
+                  <div class="panel-title">Antibiotic Misuse Correction</div>
+                  <div class="panel-sub">Tier-2 city training focus: avoid hopping, premature stopping, casual escalation, and the misconception that antibiotics should be tapered.</div>
+                </div>
+              </div>
+              <div class="list" id="misusePatterns"></div>
+            </div>
+            <div class="panel" style="grid-column:1 / -1;">
+              <div class="panel-head">
+                <div>
+                  <div class="panel-title">High-Risk Dosing Situations</div>
+                  <div class="panel-sub">Training prompts for when senior, pharmacy, microbiology, or ID review is appropriate</div>
+                </div>
+              </div>
+              <div class="list" id="doseNotes"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="view" id="view-patients">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Case Studies</div>
+                <div class="panel-sub">Curated patient journeys for doctors to read, study, and apply as reference guidance</div>
+              </div>
+              <div class="actions">
+                <button class="btn" id="exportCasesBtn">Export reading list</button>
+                <button class="btn" id="seedCasesBtn">Restore curated cases</button>
+              </div>
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>Case</th><th>Setting</th><th>Syndrome</th><th>Teaching focus</th><th>Journey stage</th><th>Level</th><th>Action</th></tr></thead><tbody id="patientsBody"></tbody></table></div>
+          </div>
+        </div>
+
+        <div class="view" id="view-sensitivity">
+          <div class="panel pad" style="margin-bottom:14px;">
+            <div class="panel-title">State Antibiogram & Sensitivity</div>
+            <div class="panel-sub">Aggregate organism-drug susceptibility from uploaded state data. Patient/sample identifiers are excluded; use the filters to inspect local resistance patterns for teaching and guidance.</div>
+            <div class="filter-panel" style="margin-top:16px;">
+              <div class="field"><label for="sensDrug">Drug name</label><select id="sensDrug"></select></div>
+              <div class="field"><label for="sensState">State</label><select id="sensState"></select></div>
+              <div class="field"><label for="sensYear">Year</label><select id="sensYear"></select></div>
+              <div class="field"><label for="sensOrganism">Organism</label><select id="sensOrganism"></select></div>
+              <div class="field"><label for="sensSpecimen">Specimen</label><select id="sensSpecimen"></select></div>
+            </div>
+          </div>
+          <div class="grid-4" id="sensitivityMetrics"></div>
+          <div class="section-title">Organism-Drug Matrix</div>
+          <div class="panel">
+            <div class="table-wrap"><table><thead id="sensitivityMatrixHead"></thead><tbody id="sensitivityMatrixBody"></tbody></table></div>
+          </div>
+          <div class="grid-2" style="margin-top:14px;">
+            <div>
+              <div class="section-title" style="margin-top:0;">Therapy Ranking</div>
+              <div class="panel pad"><div class="grid-2" id="therapyRanking"></div></div>
+            </div>
+            <div>
+              <div class="section-title" style="margin-top:0;">State Comparison</div>
+              <div class="panel"><div class="table-wrap"><table><thead><tr><th>State</th><th>Isolates</th><th>Sensitive</th><th>Intermediate</th><th>Resistant</th></tr></thead><tbody id="stateComparisonBody"></tbody></table></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="view" id="view-guidelines">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Treatment Guidelines</div>
+                <div class="panel-sub">Searchable local guideline library for common syndromes.</div>
+              </div>
+              <div class="segmented" id="guidelineFilters"></div>
+            </div>
+            <div class="list" id="guidelinesList"></div>
+          </div>
+        </div>
+
+        <div class="view" id="view-policies">
+          <div class="grid-2" id="policiesGrid"></div>
+        </div>
+
+        <div class="view" id="view-surveillance">
+          <div class="grid-4" id="surveillanceMetrics"></div>
+          <div class="section-title">Programme Signals</div>
+          <div class="grid-2">
+            <div class="panel pad">
+              <div class="panel-title">Risk Mix</div>
+              <div class="panel-sub">State-level AMR learning signals that help interpret guidelines, cases, and prescribing pressure.</div>
+              <div id="riskMixPanel" style="margin-top:14px;"></div>
+            </div>
+            <div class="panel pad">
+              <div class="panel-title">Culture-to-action Trend</div>
+              <div class="panel-sub">Median hours from culture finalization to stewardship action.</div>
+              <div id="cultureTrendPanel"></div>
+            </div>
+          </div>
+          <div class="section-title">Ward-Domain Heatmap</div>
+          <div class="panel pad">
+            <div class="table-wrap"><div class="heatmap" id="wardHeatmap"></div></div>
+          </div>
+        </div>
+
+        <div class="view" id="view-audit">
+          <div class="grid-4" id="auditMetrics"></div>
+          <div class="section-title">Interventions</div>
+          <div class="panel">
+            <div class="table-wrap"><table><thead><tr><th>Date</th><th>Ward</th><th>Issue</th><th>Recommendation</th><th>Acceptance</th><th>Impact</th></tr></thead><tbody id="auditBody"></tbody></table></div>
+          </div>
+        </div>
+
+        <div class="view" id="view-learning">
+          <div class="grid-3" id="learningGrid"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title" id="modalTitle">Details</div>
+          <div class="panel-sub" id="modalSub"></div>
+        </div>
+        <button class="btn icon-btn" id="modalClose" aria-label="Close">x</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script src="data/sensitivity_data.js"></script>
+  <script>
+    const state = {
+      view: "dashboard",
+      guidelineFilter: "all",
+      search: "",
+      patients: [],
+      sensitivity: {
+        source: "All",
+        state: "All",
+        year: "All",
+        organism: "All",
+        antibiotic: "All",
+        specimen: "All"
+      }
+    };
+
+    const views = {
+      dashboard: ["Dashboard", "Institutional antimicrobial stewardship overview"],
+      recommend: ["Guideline Recommendation", "Institutional and evidence-based antimicrobial guidance"],
+      dose: ["Dosing Safety", "Non-calculating antibiotic dosing safety reference"],
+      patients: ["Case Studies", "Curated patient journeys for stewardship training"],
+      sensitivity: ["State Antibiogram & Sensitivity", "Aggregate organism-drug susceptibility from uploaded state data"],
+      guidelines: ["Guidelines", "Syndrome-based treatment guidance"],
+      policies: ["Policies", "Restricted antibiotic and prophylaxis policies"],
+      surveillance: ["AMR Surveillance", "Risk domains, ward heatmap, and culture-to-action signals"],
+      audit: ["Audit Board", "Stewardship interventions and programme metrics"],
+      learning: ["E-Learning", "CME modules for antimicrobial stewardship"]
+    };
+
+    const metrics = [
+      ["Active guidelines", "47", "ICMR, WHO AWaRe, IDSA, local SOPs", "good"],
+      ["Case studies", "5", "Curated patient journeys", "good"],
+      ["State organisms", "38", "Antibiogram reference set", "warn"],
+      ["Learning modules", "12", "4 CME-credited", "good"]
+    ];
+
+    const alerts = [
+      ["red", "Tier-2 prescribing pattern: antibiotic hopping", "Use the new misuse-correction case to teach why 2-day azithromycin, 2-day Augmentin, and early stopping creates avoidable resistance pressure."],
+      ["red", "Learning focus: CRE Klebsiella in ICU", "Read the escalation and de-escalation case journey against the state antibiogram."],
+      ["amber", "State antibiogram update available", "Use current state susceptibility patterns before selecting empirical therapy in case exercises."],
+      ["blue", "CAP empirical pathway updated", "Moderate CAP case studies now emphasize IV-to-oral switch and 5-day duration review."],
+      ["", "AWaRe module recommended", "Use the AWaRe framework to classify Access, Watch, and Reserve choices in each case study."]
+    ];
+
+    const alertTargets = ["patients", "patients", "sensitivity", "guidelines", "learning"];
+
+    const timeline = [
+      ["Step 1", "Read a case journey", "Start with the syndrome, setting, severity, and state antibiogram context."],
+      ["Step 2", "Identify misuse pattern", "Spot antibiotic hopping, premature stop, unnecessary escalation, duplicate coverage, or treatment without bacterial syndrome."],
+      ["Step 3", "Compare with guideline pathway", "Map empirical therapy, culture collection, dose checks, and review milestones."],
+      ["Step 4", "Reflect on stewardship decision", "Identify stop, continue, switch, de-escalate, duration, and AWaRe category."]
+    ];
+
+    const diagnoses = [
+      "Community-acquired pneumonia",
+      "Hospital-acquired pneumonia",
+      "Urinary tract infection",
+      "Complicated UTI / pyelonephritis",
+      "Skin and soft tissue infection",
+      "Intra-abdominal infection",
+      "Sepsis - unknown source",
+      "Meningitis",
+      "Endocarditis",
+      "Diabetic foot infection"
+    ];
+
+    const rules = {
+      "Community-acquired pneumonia": {
+        mild: ["Consider a guideline-listed oral beta-lactam when no beta-lactam allergy is present.", "Add atypical coverage only when clinical features or local guidance support it.", "Use a non-beta-lactam alternative only after checking allergy history, contraindications, and local policy."],
+        moderate: ["Use the institutional CAP pathway to choose beta-lactam plus atypical cover or an approved alternative.", "Switch to oral therapy when afebrile, hemodynamically stable, and tolerating oral intake.", "Use the shortest guideline-supported duration when clinical response is adequate."],
+        severe: ["Use the severe CAP pathway and local antibiogram to select empirical broad-spectrum and atypical coverage.", "Send blood cultures, sputum culture, and respiratory testing before antibiotics where feasible.", "Review at the guideline-defined culture checkpoint for narrowing."]
+      },
+      "Urinary tract infection": {
+        mild: ["Prefer guideline-listed narrow oral agents for uncomplicated cystitis when renal function allows.", "Use single-dose or short-course options only as specified by the approved local guideline.", "Avoid fluoroquinolones for uncomplicated UTI unless there is no suitable alternative."],
+        moderate: ["Use the institutional pyelonephritis pathway while urine culture is pending.", "Consider fluoroquinolones only when local susceptibility and patient risk profile support it.", "De-escalate to oral culture-directed therapy once improving."]
+      },
+      "Complicated UTI / pyelonephritis": {
+        moderate: ["Choose empirical therapy from the local complicated UTI pathway based on severity and healthcare-associated risk.", "Obtain urine culture before antibiotics.", "Evaluate obstruction, catheter, stone, or abscess as source-control issues."]
+      },
+      "Hospital-acquired pneumonia": {
+        moderate: ["Choose empirical anti-pseudomonal coverage according to local policy and the state antibiogram.", "Add MRSA cover only when risk factors or local prevalence justify it.", "Use guideline-supported duration for patients with good response."],
+        severe: ["Meropenem may be appropriate when MDR gram-negative risk is high.", "Add vancomycin or linezolid for MRSA risk.", "De-escalate promptly when cultures and clinical trajectory allow."]
+      },
+      "Sepsis - unknown source": {
+        severe: ["Give broad-spectrum IV antibiotics within the local sepsis pathway timeframe after cultures when feasible.", "Piperacillin-tazobactam is a common community-source option; escalate for MDR or ICU risk.", "Source control and reassessment at 48-72 hours are mandatory."],
+        critical: ["Meropenem plus vancomycin can be considered for critical illness with MDR or MRSA risk.", "Consider antifungal cover only with strong risk factors such as prolonged ICU stay, TPN, or immunosuppression.", "Document indication, review time, and planned de-escalation criteria."]
+      }
+    };
+
+    const guidelineReferences = {
+      default: {
+        pathway: "Local syndrome pathway -> state antibiogram -> culture-directed review",
+        section: "Use local institutional guidance first; cross-check ICMR common syndrome guidance and WHO AWaRe stewardship principles.",
+        rationale: "The tool is designed for education and navigation, not autonomous prescribing. It points doctors to the relevant pathway and the decisions to verify.",
+        checkpoints: ["Confirm syndrome and severity.", "Check state antibiogram and local formulary.", "Send cultures where clinically appropriate.", "Document review, de-escalation, route switch, and duration plan."],
+        sources: [
+          { name: "ICMR Guidelines - Antimicrobial Resistance", part: "Treatment Guidelines for Antimicrobial Use in Common Syndromes and AMR resources", url: "https://www.icmr.gov.in/guidelines" },
+          { name: "WHO AWaRe antibiotic book", part: "AWaRe classification and infection-specific stewardship summaries", url: "https://www.who.int/publications/i/item/9789240062382" }
+        ]
+      },
+      "Community-acquired pneumonia": {
+        pathway: "Respiratory infection -> CAP empirical pathway -> severity and stability review",
+        section: "CAP diagnosis, site-of-care/severity assessment, empirical therapy selection, microbiology use, clinical stability, IV-to-oral switch, and duration review.",
+        rationale: "CAP recommendations should be anchored in syndrome severity and local resistance patterns, with early reassessment once clinical stability and microbiology information are available.",
+        checkpoints: ["Confirm CAP rather than HAP/VAP or noninfectious mimic.", "Assess severity and need for admission/ICU.", "Decide whether atypical coverage is justified.", "Review stability and route switch criteria.", "Use state antibiogram for local respiratory pathogen susceptibility."],
+        sources: [
+          { name: "ICMR common syndrome guidance", part: "Respiratory tract infections / pneumonia syndrome pathway", url: "https://www.icmr.gov.in/guidelines" },
+          { name: "ATS/IDSA CAP guideline", part: "Adult CAP diagnosis and treatment recommendations", url: "https://www.idsociety.org/practice-guideline/community-acquired-pneumonia-cap-in-adults" },
+          { name: "WHO AWaRe antibiotic book", part: "Pneumonia chapter and AWaRe category check", url: "https://www.who.int/publications/i/item/9789240062382" }
+        ]
+      },
+      "Hospital-acquired pneumonia": {
+        pathway: "Nosocomial pneumonia -> HAP/VAP pathway -> local antibiogram and MDR-risk review",
+        section: "Microbiologic sampling, empiric regimen selection using local resistance data, MRSA/MDR risk factors, de-escalation, and duration review.",
+        rationale: "HAP/VAP guidance explicitly emphasizes local antibiograms and narrowing therapy once cultures and clinical trajectory allow.",
+        checkpoints: ["Confirm hospital-acquired timing and whether VAP applies.", "Obtain respiratory and blood cultures when feasible.", "Use ICU/ward-specific susceptibility data if available.", "Add MRSA or dual gram-negative coverage only when risk justifies it.", "De-escalate based on culture results and response."],
+        sources: [
+          { name: "ATS/IDSA HAP/VAP guideline", part: "Microbiologic methods; initial empiric treatment; local antibiogram recommendations; pathogen-specific therapy", url: "https://www.idsociety.org/practice-guideline/hap_vap/" },
+          { name: "ICMR common syndrome guidance", part: "Hospital-acquired respiratory infection pathway", url: "https://www.icmr.gov.in/guidelines" },
+          { name: "WHO AWaRe antibiotic book", part: "Hospital infection and Reserve/Watch antibiotic stewardship context", url: "https://www.who.int/publications/i/item/9789240062382" }
+        ]
+      },
+      "Urinary tract infection": {
+        pathway: "UTI syndrome -> uncomplicated vs complicated -> empirical choice and culture-directed narrowing",
+        section: "Uncomplicated cystitis, pyelonephritis/complicated UTI distinction, urine culture indications, fluoroquinolone avoidance, and oral narrowing.",
+        rationale: "UTI choices should avoid unnecessary broad-spectrum therapy and should use local uropathogen susceptibility where empirical treatment is needed.",
+        checkpoints: ["Classify uncomplicated cystitis vs pyelonephritis/complicated UTI.", "Check renal safety and contraindications without calculating doses in this app.", "Avoid fluoroquinolones when narrow options are suitable.", "Use urine culture to narrow therapy.", "Check state susceptibility for common uropathogens."],
+        sources: [
+          { name: "ICMR common syndrome guidance", part: "Urinary tract infection syndrome pathway", url: "https://www.icmr.gov.in/guidelines" },
+          { name: "WHO AWaRe antibiotic book", part: "UTI chapter and Access/Watch selection principles", url: "https://www.who.int/publications/i/item/9789240062382" }
+        ]
+      },
+      "Complicated UTI / pyelonephritis": {
+        pathway: "Complicated UTI / pyelonephritis -> culture first -> source-control and narrowing review",
+        section: "Complicated UTI risk factors, culture collection, obstruction/catheter/stone evaluation, empirical therapy, and culture-directed de-escalation.",
+        rationale: "Complicated UTI requires identifying source-control problems and narrowing therapy once culture and susceptibility results return.",
+        checkpoints: ["Assess obstruction, catheter, stone, abscess, pregnancy, male sex, or immunocompromise.", "Send urine culture before treatment when feasible.", "Use state antibiogram while cultures are pending.", "Review source control.", "Narrow to the safest effective option."],
+        sources: [
+          { name: "ICMR common syndrome guidance", part: "Complicated UTI / pyelonephritis pathway", url: "https://www.icmr.gov.in/guidelines" },
+          { name: "WHO AWaRe antibiotic book", part: "UTI and pyelonephritis stewardship context", url: "https://www.who.int/publications/i/item/9789240062382" }
+        ]
+      },
+      "Sepsis - unknown source": {
+        pathway: "Sepsis pathway -> cultures/source search -> empirical coverage -> early de-escalation",
+        section: "Sepsis recognition, culture collection, source control, broad empirical coverage when indicated, MDR/MRSA risk assessment, and 48-72 hour review.",
+        rationale: "Sepsis guidance balances urgent empirical treatment with diagnostic sampling, source control, and early de-escalation when data return.",
+        checkpoints: ["Recognize shock or organ dysfunction early.", "Send cultures if this does not delay urgent treatment.", "Identify likely source and source-control needs.", "Escalate only for severity/MDR risk.", "Schedule mandatory culture and de-escalation review."],
+        sources: [
+          { name: "ICMR common syndrome guidance", part: "Sepsis / bloodstream infection syndrome pathway", url: "https://www.icmr.gov.in/guidelines" },
+          { name: "WHO AWaRe antibiotic book", part: "Severe infection stewardship and Reserve antibiotic context", url: "https://www.who.int/publications/i/item/9789240062382" }
+        ]
+      }
+    };
+
+    const contextSignals = [
+      ["High-risk", "Prior ESBL or admission in last 90 days should raise MDR concern."],
+      ["Culture first", "Blood, urine, sputum, wound, or sterile-site cultures should be sent before antibiotics when this does not delay urgent care."],
+      ["Time-out", "Every broad-spectrum start needs a documented 48-72 hour review."],
+      ["AWaRe", "Watch and Reserve agents require stronger justification and stop or review dates."],
+      ["Do not hop", "Changing antibiotics every 1-2 days without diagnosis, cultures, response criteria, or adverse-event rationale is a stewardship failure."],
+      ["Stop vs switch", "Antibiotics are usually stopped, switched, or narrowed; tapering is not the usual antimicrobial concept."]
+    ];
+
+    const misusePatterns = [
+      ["2-day antibiotic hopping", "Azithromycin for 2 days, then amoxicillin-clavulanate for 2 days, then another agent without reassessment creates confusion, adverse-event risk, and resistance pressure. Corrective action: return to syndrome diagnosis, severity, cultures, and guideline duration."],
+      ["Premature stopping", "Stopping once fever reduces can leave an inadequately treated bacterial infection when a guideline-supported course is still indicated. Corrective action: define minimum review criteria and total duration target at the first prescription."],
+      ["Escalation without evidence", "Moving from Access to Watch or Reserve agents because symptoms have not resolved in 24-48 hours may be inappropriate. Corrective action: check expected response time, source control, adherence, microbiology, and alternate diagnosis."],
+      ["Duplicate or overlapping coverage", "Combining agents with overlapping spectrum without a clear reason increases harm without improving stewardship quality. Corrective action: document each agent's role and remove duplication at review."],
+      ["Tapering misconception", "Antibiotics are not normally tapered. The stewardship choices are stop, continue to planned duration, switch route, narrow spectrum, escalate for defined risk, or seek expert review."]
+    ];
+
+    const dosingReviewDrugs = [
+      {
+        name: "Amoxicillin-clavulanic acid",
+        aware: "Access / commonly used",
+        keyChecks: ["Renal adjustment may be required.", "Confirm clavulanate exposure is appropriate for the chosen regimen.", "Check allergy history and hepatic adverse-event risk."],
+        monitoring: ["Renal function", "GI intolerance", "Hepatic symptoms if prolonged therapy"]
+      },
+      {
+        name: "Azithromycin",
+        aware: "Watch in many stewardship frameworks",
+        keyChecks: ["Check QT risk, interacting drugs, and arrhythmia history.", "Avoid using atypical coverage when syndrome pathway does not justify it.", "Confirm local macrolide resistance context."],
+        monitoring: ["QT-risk medication list", "Clinical response", "Liver risk if prolonged"]
+      },
+      {
+        name: "Cefixime",
+        aware: "Watch / oral cephalosporin",
+        keyChecks: ["Verify syndrome fit; avoid oral cephalosporin use where local resistance is high.", "Renal adjustment may be required.", "Check severe beta-lactam allergy history."],
+        monitoring: ["Renal function", "Culture result", "Clinical response"]
+      },
+      {
+        name: "Cefpodoxime",
+        aware: "Watch / oral cephalosporin",
+        keyChecks: ["Confirm oral step-down is clinically appropriate.", "Renal adjustment may be required.", "Check state antibiogram before empirical use."],
+        monitoring: ["Renal function", "Culture result", "IV-to-oral criteria"]
+      },
+      {
+        name: "Levofloxacin",
+        aware: "Watch / restrict unless clearly justified",
+        keyChecks: ["Avoid when narrow alternatives are suitable.", "Check QT, tendon, CNS, glucose, pregnancy, and interacting-drug risks.", "Renal adjustment is commonly required."],
+        monitoring: ["Renal function", "QT-risk profile", "Adverse-effect counselling", "Culture-directed stop or switch"]
+      },
+      {
+        name: "Meropenem",
+        aware: "Watch / restricted broad-spectrum",
+        keyChecks: ["Use only when MDR risk, severity, or culture data justifies carbapenem therapy.", "Renal adjustment may be required.", "Document approval route and de-escalation trigger."],
+        monitoring: ["Renal function", "Culture finalization", "Seizure/CNS risk", "48-72 hour stewardship review"]
+      },
+      {
+        name: "Piperacillin-tazobactam",
+        aware: "Watch / broad-spectrum",
+        keyChecks: ["Check renal function and infusion strategy in severe infection.", "Assess prior ESBL/MDR risk and local susceptibility.", "Avoid unnecessary continuation once culture data return."],
+        monitoring: ["Renal function", "Sodium/fluid context", "Culture results", "De-escalation plan"]
+      },
+      {
+        name: "Vancomycin",
+        aware: "Watch / MRSA-directed",
+        keyChecks: ["Use only when MRSA or resistant gram-positive risk is credible.", "Therapeutic drug monitoring is required.", "Renal injury risk rises with nephrotoxic combinations."],
+        monitoring: ["TDM protocol", "Renal function", "MRSA culture or screen", "Stop criteria"]
+      },
+      {
+        name: "Linezolid",
+        aware: "Watch / restricted gram-positive option",
+        keyChecks: ["Verify MRSA/VRE indication and oral bioavailability fit.", "Check platelet count, serotonergic drugs, neuropathy risk, and duration.", "Avoid casual use when beta-lactam or narrower therapy is suitable."],
+        monitoring: ["CBC", "Drug interactions", "Neuropathy risk if prolonged", "Stop or switch date"]
+      },
+      {
+        name: "Aminoglycoside",
+        aware: "Watch / toxicity-sensitive",
+        keyChecks: ["Use local pharmacokinetic guidance, not a simple calculator.", "High renal and ototoxicity risk requires careful indication.", "Avoid duplicate nephrotoxins where possible."],
+        monitoring: ["TDM protocol", "Renal function", "Hearing/vestibular risk", "Stop date"]
+      }
+    ];
+
+    const guidelines = [
+      { source: "ICMR / ATS-IDSA / WHO", group: "respiratory", title: "Community-acquired pneumonia", badge: "Respiratory", body: "Use severity, site-of-care, local resistance, microbiology need, clinical stability, IV-to-oral switch, and duration review to navigate CAP decisions.", referenceKey: "Community-acquired pneumonia" },
+      { source: "ICMR / WHO", group: "uti", title: "Uncomplicated UTI", badge: "UTI", body: "Classify cystitis separately from pyelonephritis or complicated UTI. Prefer narrow options when appropriate and avoid fluoroquinolones when better choices exist.", referenceKey: "Urinary tract infection" },
+      { source: "WHO", group: "aware", title: "AWaRe prescribing framework", badge: "AWaRe", body: "Use Access, Watch, and Reserve categories as stewardship guardrails; Watch and Reserve choices need stronger justification, review dates, and de-escalation plans.", referenceKey: "default" },
+      { source: "Local / WHO AWaRe", group: "aware", title: "Antibiotic hopping correction", badge: "Misuse", body: "Do not change antibiotics every 1-2 days without a defined clinical, microbiology, allergy, toxicity, source-control, or severity reason. Reassess first, then stop, continue, switch route, narrow, or escalate with documentation.", referenceKey: "default" },
+      { source: "ATS-IDSA / ICMR / WHO", group: "respiratory", title: "HAP/VAP", badge: "Respiratory", body: "Choose empirical coverage based on MDR risk, local antibiogram, and severity. Culture-directed de-escalation is central to stewardship.", referenceKey: "Hospital-acquired pneumonia" },
+      { source: "ICMR / WHO / Local", group: "sepsis", title: "Sepsis pathway", badge: "Sepsis", body: "Document suspected source, cultures, empirical antibiotic rationale, source-control plan, and mandatory review time.", referenceKey: "Sepsis - unknown source" },
+      { source: "Local", group: "surgery", title: "Surgical prophylaxis", badge: "Surgery", body: "Give prophylaxis within the approved pre-incision window, redose only when indicated by policy, and stop within protocol duration unless treatment is indicated.", referenceKey: "default" }
+    ];
+
+    const policies = [
+      ["Restricted antibiotics", "Approval required", "Carbapenems, colistin, polymyxin B, tigecycline, IV vancomycin, linezolid and newer beta-lactam/beta-lactamase inhibitor combinations require documented indication and review date."],
+      ["De-escalation policy", "Mandatory", "Broad-spectrum therapy must be reviewed at 48-72 hours with cultures, clinical response, source control, and stop or switch plan documented."],
+      ["Antibiotic hopping policy", "Mandatory", "Changing from one antibiotic to another within 48 hours requires a documented reason: culture result, clinical deterioration, allergy/toxicity, source-control finding, wrong syndrome, or approved escalation pathway."],
+      ["Surgical prophylaxis", "Protocol", "Cefazolin-based prophylaxis is preferred for many clean procedures. Continue beyond 24 hours only when the surgical policy explicitly allows it."],
+      ["IV to oral switch", "Preferred", "Switch when afebrile, hemodynamically stable, improving clinically, tolerating oral intake, and no contraindication to oral therapy exists."]
+    ];
+
+    const demoPatients = [
+      ["CASE-01", "ICU", "Sepsis - unknown source", "CRE/ESBL risk, escalation and de-escalation", "Culture final", "Advanced"],
+      ["CASE-02", "Medicine ward", "Community-acquired pneumonia", "Empirical choice, atypical cover, IV-to-oral switch", "48-hour review", "Core"],
+      ["CASE-03", "Surgery", "Post-operative prophylaxis", "Prophylaxis duration and stop-date discipline", "Post-op day 2", "Core"],
+      ["CASE-04", "Medicine OPD/IPD", "Urinary tract infection", "State antibiogram use and fluoroquinolone avoidance", "Culture pending", "Intermediate"],
+      ["CASE-05", "Tier-2 OPD", "Acute respiratory symptoms", "Azithromycin-to-Augmentin hopping, premature stop, and guideline reset", "Day 4 revisit", "Core"]
+    ];
+
+    const caseTrajectories = {
+      "CASE-01": {
+        synopsis: "A critically ill adult presents with septic shock after recent healthcare exposure. Initial broad-spectrum therapy is started while cultures are pending.",
+        culture: "Blood culture grows ESBL E. coli. State antibiogram shows high third-generation cephalosporin resistance but retained susceptibility to amikacin and piperacillin-tazobactam in selected isolates.",
+        action: "Study when meropenem is justified, when it can be narrowed, and how clinical stability/source control affect the decision.",
+        learning: ["Recognize MDR risk factors before empirical therapy.", "Use state antibiogram data without ignoring patient-specific severity.", "Plan a 48-72 hour de-escalation checkpoint from the start."],
+        markers: [["D0", 46, "high"], ["D1", 38, "high"], ["D2", 22, "watch"], ["D3", 14, "stable"]]
+      },
+      "CASE-02": {
+        synopsis: "An adult with moderate community-acquired pneumonia is admitted for oxygen requirement and fever.",
+        culture: "Blood cultures remain negative. Respiratory sample is non-diagnostic. State antibiogram supports beta-lactam use for likely respiratory pathogens.",
+        action: "Study empirical CAP therapy, atypical coverage, clinical stability criteria, and when to switch to oral therapy.",
+        learning: ["Match syndrome severity to empirical regimen.", "Avoid unnecessary prolonged broad-spectrum therapy.", "Define response criteria before extending duration."],
+        markers: [["D0", 31, "watch"], ["D1", 24, "watch"], ["D2", 12, "stable"], ["D3", 8, "stable"]]
+      },
+      "CASE-03": {
+        synopsis: "A stable post-operative patient continues cefazolin beyond the usual prophylaxis window despite no evidence of infection.",
+        culture: "No culture is indicated because this is prophylaxis, not treatment. State resistance context reinforces avoiding unnecessary antibiotic exposure.",
+        action: "Study the difference between prophylaxis and treatment, and how stop dates prevent avoidable antibiotic days.",
+        learning: ["Separate surgical prophylaxis from active infection management.", "Apply stop-date rules.", "Recognize how unnecessary exposure drives resistance."],
+        markers: [["D0", 6, "stable"], ["D1", 5, "stable"], ["D2", 5, "stable"], ["D3", 4, "stable"]]
+      },
+      "CASE-04": {
+        synopsis: "A patient with urinary symptoms has prior fluoroquinolone-resistant isolates and current culture pending.",
+        culture: "Urine culture is pending. State antibiogram shows low ciprofloxacin susceptibility for common uropathogens.",
+        action: "Study how state antibiogram data changes empirical UTI choices and when oral narrow-spectrum agents are preferred.",
+        learning: ["Avoid fluoroquinolones for uncomplicated UTI when better options exist.", "Use prior cultures and state susceptibility patterns.", "Narrow once culture results return."],
+        markers: [["D0", 28, "watch"], ["D1", 19, "watch"], ["D2", 10, "stable"], ["D3", 7, "stable"]]
+      },
+      "CASE-05": {
+        synopsis: "A patient in a Tier-2 OPD receives azithromycin for 2 days for acute respiratory symptoms, then is moved to amoxicillin-clavulanate because fever persists, then stops treatment after 2 more days when symptoms partially improve.",
+        culture: "No bacterial syndrome was confirmed and no culture or diagnostic checkpoint was defined. State respiratory antibiogram should be used only after deciding that bacterial infection and empirical antibiotic therapy are actually justified.",
+        action: "Study how to reset the encounter: confirm likely viral vs bacterial syndrome, assess severity and red flags, avoid antibiotic hopping, explain expected symptom course, and document stop/switch criteria.",
+        learning: ["Do not switch antibiotics simply because symptoms persist for 24-48 hours without reassessment.", "Antibiotics are not usually tapered; choose stop, continue, IV-to-oral switch, de-escalation, or escalation based on defined criteria.", "When an antibiotic is justified, set duration, review point, safety counselling, and return precautions at the first prescription.", "Use the antibiogram to guide empirical choice only after the syndrome justifies antibiotics."],
+        markers: [["D0", 18, "watch"], ["D2", 16, "watch"], ["D4", 21, "high"], ["D7", 9, "stable"]]
+      }
+    };
+
+    const surveillanceDomains = [
+      ["ICU", 7, 4, 2, 18],
+      ["Medicine", 3, 6, 5, 32],
+      ["Surgery", 1, 7, 9, 46],
+      ["Pediatrics", 0, 2, 3, 12]
+    ];
+
+    const wardDomainHeat = [
+      ["ICU", ["high", "high", "watch", "watch"], ["CRE / CRAB", "Reserve starts", "Renal toxicity", "De-escalation overdue"]],
+      ["Medicine", ["watch", "watch", "stable", "high"], ["ESBL risk", "Watch antibiotic use", "Monitoring stable", "IV-to-oral overdue"]],
+      ["Surgery", ["stable", "watch", "stable", "high"], ["Low MDR signal", "Prophylaxis duration", "Monitoring stable", "Stop-date missing"]],
+      ["Pediatrics", ["stable", "stable", "watch", "stable"], ["Low MDR signal", "Access preferred", "Dose check", "Review current"]]
+    ];
+
+    const auditRows = [
+      ["May 31", "ICU", "Meropenem continuation after culture final", "De-escalate to piperacillin-tazobactam", "Accepted", "Watch antibiotic days avoided"],
+      ["May 30", "Surgery", "Prophylaxis continued beyond 48 h", "Stop cefazolin", "Accepted", "2 DOT avoided"],
+      ["May 29", "Medicine", "Uncomplicated UTI on ceftriaxone", "Switch to nitrofurantoin", "Partial", "IV-to-oral conversion"],
+      ["May 28", "ICU", "Vancomycin without MRSA risk", "Stop MRSA cover", "Accepted", "TDM avoided"]
+    ];
+
+    const modules = [
+      ["Stewardship foundations", "Core principles, governance, audit cycles, and practical ward workflows.", 100, "CME"],
+      ["Interpreting antibiograms", "Breakpoints, isolate counts, syndrome relevance, and empirical therapy selection.", 60, "Skill"],
+      ["AWaRe in daily practice", "Access, Watch, Reserve categories and prescribing reports.", 35, "CME"],
+      ["PK/PD optimization", "Time-dependent and concentration-dependent antibiotic exposure.", 20, "Advanced"],
+      ["MDR gram-negative infections", "ESBL, CRE, CRAB risk assessment and escalation logic.", 0, "CME"],
+      ["De-escalation and IV-to-oral switch", "How to narrow, stop, or switch therapy after clinical review.", 80, "Skill"],
+      ["Antibiotic hopping in OPD practice", "Tier-2 city scenarios: 2-day switches, early stopping, counselling, review points, and guideline reset.", 10, "Core"]
+    ];
+
+    function $(id) { return document.getElementById(id); }
+    function norm(value) { return String(value || "").toLowerCase(); }
+    function matchesSearch(text) { return !state.search || norm(text).includes(state.search); }
+
+    function toast(message) {
+      const el = $("toast");
+      el.textContent = message;
+      el.classList.add("visible");
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => el.classList.remove("visible"), 2200);
+    }
+
+    function setView(name) {
+      state.view = name;
+      document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
+      $("view-" + name).classList.add("active");
+      document.querySelectorAll(".nav-item").forEach(el => el.classList.toggle("active", el.dataset.view === name));
+      $("viewTitle").textContent = views[name][0];
+      $("viewSub").textContent = views[name][1];
+      $("sidebar").classList.remove("open");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      render();
+    }
+
+    function renderMetrics() {
+      $("metrics").innerHTML = metrics.map(m => `<div class="metric"><div class="label">${m[0]}</div><div class="value">${m[1]}</div><div class="trend ${m[3]}">${m[2]}</div></div>`).join("");
+      $("auditMetrics").innerHTML = [
+        ["Acceptance", "76%", "Accepted or partially accepted", "good"],
+        ["DOT avoided", "184", "Month to date", "good"],
+        ["Restricted use scenarios", "31", "Training examples in library", "warn"],
+        ["Avg review time", "54 h", "Target: under 72 h", "good"]
+      ].map(m => `<div class="metric"><div class="label">${m[0]}</div><div class="value">${m[1]}</div><div class="trend ${m[3]}">${m[2]}</div></div>`).join("");
+    }
+
+    function renderDashboard() {
+      $("alertsList").innerHTML = alerts.map((a, i) => ({ row: a, index: i })).filter(a => matchesSearch(a.row.join(" "))).map(a => `<button class="item item-button" data-alert="${a.index}"><span class="dot ${a.row[0]}"></span><div><div class="item-title">${a.row[1]}</div><div class="item-meta">${a.row[2]}</div></div><span class="badge neutral">Open</span></button>`).join("") || `<div class="empty">No matching alerts.</div>`;
+      $("todayTimeline").innerHTML = timeline.map(t => `<div class="timeline-row"><div class="time">${t[0]}</div><div><div class="item-title">${t[1]}</div><div class="item-meta">${t[2]}</div></div></div>`).join("");
+    }
+
+    function populateSelects() {
+      $("diagnosis").innerHTML = `<option value="">Select diagnosis</option>` + diagnoses.map(d => `<option>${d}</option>`).join("");
+      $("doseDrug").innerHTML = dosingReviewDrugs.map(d => `<option>${d.name}</option>`).join("");
+      $("doseSyndrome").innerHTML = diagnoses.map(d => `<option>${d}</option>`).join("");
+      populateSensitivityFilters();
+    }
+
+    function optionList(values, selected, includeAll = true) {
+      const opts = includeAll ? [`<option value="All">All</option>`] : [];
+      values.forEach(value => opts.push(`<option value="${value}" ${value === selected ? "selected" : ""}>${value}</option>`));
+      return opts.join("");
+    }
+
+    function sensitivityPayload() {
+      return window.SANTULAN_SENSITIVITY_DATA || { summary: {}, records: [] };
+    }
+
+    function populateSensitivityFilters() {
+      const payload = sensitivityPayload();
+      if (!$("sensDrug") || !payload.summary.antibiotics) return;
+      $("sensDrug").innerHTML = optionList(payload.summary.antibiotics || [], state.sensitivity.antibiotic);
+      $("sensState").innerHTML = optionList(payload.summary.states || [], state.sensitivity.state);
+      $("sensYear").innerHTML = optionList(payload.summary.years || [], state.sensitivity.year);
+      $("sensOrganism").innerHTML = optionList(payload.summary.organisms || [], state.sensitivity.organism);
+      $("sensSpecimen").innerHTML = optionList(payload.summary.specimens || [], state.sensitivity.specimen);
+    }
+
+    function filteredSensitivityRecords() {
+      return sensitivityPayload().records.filter(row => {
+        const f = state.sensitivity;
+        return (f.source === "All" || row.source === f.source) &&
+          (f.state === "All" || row.state === f.state) &&
+          (f.year === "All" || row.year === f.year) &&
+          (f.organism === "All" || row.organism === f.organism) &&
+          (f.antibiotic === "All" || row.antibiotic === f.antibiotic) &&
+          (f.specimen === "All" || row.specimen === f.specimen);
+      });
+    }
+
+    function mergeSensitivity(records, keys) {
+      const map = new Map();
+      records.forEach(row => {
+        const key = keys.map(k => row[k]).join("||");
+        if (!map.has(key)) {
+          const base = {};
+          keys.forEach(k => base[k] = row[k]);
+          map.set(key, { ...base, s: 0, i: 0, r: 0, total: 0 });
+        }
+        const item = map.get(key);
+        item.s += row.s;
+        item.i += row.i;
+        item.r += row.r;
+        item.total += row.total;
+      });
+      return Array.from(map.values()).map(item => ({
+        ...item,
+        s_pct: item.total ? Math.round((item.s / item.total) * 1000) / 10 : 0,
+        i_pct: item.total ? Math.round((item.i / item.total) * 1000) / 10 : 0,
+        r_pct: item.total ? Math.round((item.r / item.total) * 1000) / 10 : 0
+      }));
+    }
+
+    function sensitivityTone(rate) {
+      if (rate >= 80) return "good";
+      if (rate >= 60) return "watch";
+      return "risk";
+    }
+
+    function renderReferenceCards(ref) {
+      return `<div class="reference-grid">${ref.sources.map(source => `
+        <div class="reference-card">
+          <h4>${source.name}</h4>
+          <p>${source.part}</p>
+          <a href="${source.url}" target="_blank" rel="noreferrer">Read source</a>
+        </div>
+      `).join("")}</div>`;
+    }
+
+    function guidelineReferenceFor(key) {
+      return guidelineReferences[key] || guidelineReferences.default;
+    }
+
+    function renderSensitivity() {
+      if (!$("sensitivityMetrics")) return;
+      const payload = sensitivityPayload();
+      const records = filteredSensitivityRecords();
+      const totals = mergeSensitivity(records, []);
+      const total = totals[0] || { s: 0, i: 0, r: 0, total: 0, s_pct: 0, r_pct: 0 };
+      const organisms = new Set(records.map(row => row.organism));
+      const antibiotics = new Set(records.map(row => row.antibiotic));
+      $("sensitivityMetrics").innerHTML = [
+        ["Result rows", records.length.toLocaleString(), `${total.total.toLocaleString()} isolate-drug tests`, "good"],
+        ["Organisms", organisms.size, "Filtered organism count", "good"],
+        ["Antibiotics", antibiotics.size, "Therapies tested", "warn"],
+        ["Overall sensitive", `${total.s_pct || 0}%`, `${total.r_pct || 0}% resistant`, sensitivityTone(total.s_pct || 0)]
+      ].map(m => `<div class="metric"><div class="label">${m[0]}</div><div class="value">${m[1]}</div><div class="trend ${m[3]}">${m[2]}</div></div>`).join("");
+
+      const matrix = mergeSensitivity(records, ["organism", "antibiotic"]);
+      const organismList = Array.from(organisms).sort();
+      const antibioticList = Array.from(antibiotics).sort();
+      $("sensitivityMatrixHead").innerHTML = `<tr><th>Organism</th>${antibioticList.map(a => `<th>${a}</th>`).join("")}</tr>`;
+      $("sensitivityMatrixBody").innerHTML = organismList.map(org => {
+        const cells = antibioticList.map(abx => {
+          const item = matrix.find(row => row.organism === org && row.antibiotic === abx);
+          if (!item) return `<td><span class="sens na">-</span></td>`;
+          return `<td><div class="sensitivity-cell" data-tone="${sensitivityTone(item.s_pct)}">${item.s_pct}%<small>n=${item.total}</small></div></td>`;
+        }).join("");
+        return `<tr><td><b>${org}</b></td>${cells}</tr>`;
+      }).join("") || `<tr><td colspan="${antibioticList.length + 1}"><div class="empty">No sensitivity data matches the selected filters.</div></td></tr>`;
+
+      const therapy = mergeSensitivity(records, ["antibiotic"]).sort((a, b) => b.s_pct - a.s_pct || b.total - a.total);
+      $("therapyRanking").innerHTML = therapy.slice(0, 8).map(item => `<div class="therapy-card">
+        <div class="therapy-card-top"><div class="therapy-name">${item.antibiotic}</div><span class="badge ${sensitivityTone(item.s_pct) === "good" ? "green" : sensitivityTone(item.s_pct) === "watch" ? "amber" : "red"}">${item.s_pct}% S</span></div>
+        <div class="bar-track"><span class="bar-s" style="width:${item.s_pct}%"></span><span class="bar-i" style="width:${item.i_pct}%"></span><span class="bar-r" style="width:${item.r_pct}%"></span></div>
+        <div class="item-meta">n=${item.total.toLocaleString()} | I ${item.i_pct}% | R ${item.r_pct}%</div>
+      </div>`).join("") || `<div class="empty">No therapies to rank.</div>`;
+
+      const byState = mergeSensitivity(records, ["state"]).filter(row => row.state !== "Not specified").sort((a, b) => b.total - a.total || a.state.localeCompare(b.state));
+      $("stateComparisonBody").innerHTML = byState.slice(0, 12).map(row => `<tr><td><b>${row.state}</b></td><td>${row.total.toLocaleString()}</td><td>${row.s_pct}%</td><td>${row.i_pct}%</td><td>${row.r_pct}%</td></tr>`).join("") || `<tr><td colspan="5"><div class="empty">State comparison is unavailable for this filter combination.</div></td></tr>`;
+    }
+
+    function renderContextSignals() {
+      $("contextSignals").innerHTML = contextSignals.map(s => `<div class="item"><span class="dot blue"></span><div><div class="item-title">${s[0]}</div><div class="item-meta">${s[1]}</div></div></div>`).join("");
+    }
+
+    function getRecommendation() {
+      const dx = $("diagnosis").value;
+      if (!dx) { toast("Select a suspected infection first."); return; }
+      const severity = $("severity").value.toLowerCase();
+      const setting = $("setting").value;
+      const egfr = Number($("egfr").value);
+      const allergy = norm($("allergy").value);
+      const notes = norm($("notes").value);
+      const dxRules = rules[dx] || {};
+      const picked = dxRules[severity] || dxRules.moderate || dxRules.mild || [
+        "Use syndrome-specific local policy and current cultures to guide therapy.",
+        "Send relevant cultures before antibiotics when feasible.",
+        "Document a 48-72 hour antibiotic review plan."
+      ];
+      const stewardshipReset = [
+        "Do not change antibiotics every 1-2 days because symptoms persist without first reassessing diagnosis, severity, source control, expected response time, adherence, and adverse effects.",
+        "Antibiotics are usually stopped, continued to planned duration, switched from IV to oral, narrowed, or escalated for defined reasons; tapering is not the usual antimicrobial approach.",
+        "For OPD/Tier-2 practice, write the review point, duration target, warning signs, and reason for any future switch at the first prescription."
+      ];
+      const warnings = [];
+      if (egfr && egfr < 30) warnings.push("Renal function is reduced. Adjust renally cleared agents and avoid nephrotoxic combinations where possible.");
+      if (allergy.includes("penicillin")) warnings.push("Penicillin allergy is documented. Verify reaction type before excluding all beta-lactams.");
+      if (notes.includes("esbl") || notes.includes("mdr") || setting === "ICU") warnings.push("MDR risk signal present. Use local antibiogram and prior cultures before narrowing.");
+      const ref = guidelineReferenceFor(dx);
+      const html = `
+        <div class="result-title"><span>Guideline navigator for ${dx}</span><span class="badge">Guideline-driven</span></div>
+        <div class="rec-line"><span class="rec-ico">1</span><span><b>Guideline pathway:</b> ${ref.pathway}</span></div>
+        <div class="rec-line"><span class="rec-ico">2</span><span><b>Relevant section:</b> ${ref.section}</span></div>
+        <div class="rec-line"><span class="rec-ico">R</span><span><b>Why this pathway:</b> ${ref.rationale}</span></div>
+        <div class="panel-sub" style="margin-top:14px;"><b>Guideline prompts for this scenario</b></div>
+        ${picked.map(p => `<div class="rec-line"><span class="rec-ico">+</span><span>${p}</span></div>`).join("")}
+        <div class="panel-sub" style="margin-top:14px;"><b>Misuse correction prompts</b></div>
+        ${stewardshipReset.map(p => `<div class="rec-line"><span class="rec-ico">S</span><span>${p}</span></div>`).join("")}
+        ${warnings.map(w => `<div class="rec-line"><span class="rec-ico">!</span><span><b>Safety prompt:</b> ${w}</span></div>`).join("")}
+        <div class="rec-line"><span class="rec-ico">48</span><span><b>Time-out:</b> Reassess cultures, clinical response, source control, and duration at 48-72 hours.</span></div>
+        <div class="panel-sub" style="margin-top:14px;"><b>What to verify before prescribing</b></div>
+        ${ref.checkpoints.map(c => `<div class="rec-line"><span class="rec-ico">?</span><span>${c}</span></div>`).join("")}
+        <div class="panel-sub" style="margin-top:14px;"><b>Read more</b></div>
+        ${renderReferenceCards(ref)}
+        <div class="disclaimer">Guideline-driven educational reference only. This app does not calculate doses, choose a final prescription, replace clinician judgement, validated local policy, infectious diseases consultation, microbiology interpretation, or medication safety checks.</div>`;
+      $("recommendResult").innerHTML = html;
+      $("recommendResult").classList.add("visible");
+    }
+
+    function clearRecommendation() {
+      ["age", "weight", "egfr", "allergy", "notes"].forEach(id => $(id).value = "");
+      ["sex", "diagnosis", "setting", "severity"].forEach(id => $(id).selectedIndex = 0);
+      $("recommendResult").classList.remove("visible");
+    }
+
+    function openCaseLibrary() {
+      setView("patients");
+      toast("Opened curated case studies.");
+    }
+
+    function renderDoseNotes() {
+      const checklist = [
+        ["Confirm indication", "Dose depends on syndrome, severity, site penetration, organism, and whether therapy is empirical, directed, or prophylactic."],
+        ["Check patient factors", "Renal function, hepatic dysfunction, age, pregnancy, weight extremes, immune status, and allergy history can all change the safe regimen."],
+        ["Use approved source", "Exact dose, interval, route, infusion duration, and maximum dose must come from the institutional formulary or prescribing system."],
+        ["Plan review", "Document review timing, culture follow-up, de-escalation criteria, IV-to-oral switch criteria, and total duration target."]
+      ];
+      const highRisk = [
+        ["Renal replacement therapy", "Do not rely on simple eGFR adjustment. Use pharmacy or specialist dosing guidance."],
+        ["Vancomycin / aminoglycosides", "Require therapeutic drug monitoring and local monitoring protocols."],
+        ["Critical illness", "Loading doses, augmented renal clearance, obesity, and infusion strategy may need specialist review."],
+        ["Pediatrics / pregnancy", "Use dedicated dosing references and senior review; adult shortcuts are unsafe."],
+        ["Restricted antibiotics", "Reserve agents should have documented indication, approval pathway, and stop/review date."]
+      ];
+      $("doseSafetyChecklist").innerHTML = checklist.map(n => `<div class="item"><span class="dot blue"></span><div><div class="item-title">${n[0]}</div><div class="item-meta">${n[1]}</div></div></div>`).join("");
+      $("misusePatterns").innerHTML = misusePatterns.map(n => `<div class="item"><span class="dot red"></span><div><div class="item-title">${n[0]}</div><div class="item-meta">${n[1]}</div></div></div>`).join("");
+      $("doseNotes").innerHTML = highRisk.map(n => `<div class="item"><span class="dot amber"></span><div><div class="item-title">${n[0]}</div><div class="item-meta">${n[1]}</div></div></div>`).join("");
+    }
+
+    function runDosingReview() {
+      const drugName = $("doseDrug").value;
+      const syndrome = $("doseSyndrome").value;
+      const egfr = $("doseEgfr").value;
+      const weight = $("doseWeight").value;
+      const severity = $("doseSeverity").value;
+      const culture = $("doseCulture").value;
+      const drug = dosingReviewDrugs.find(d => d.name === drugName) || dosingReviewDrugs[0];
+      const flags = [];
+      if (["15-29", "<15", "Dialysis / RRT"].includes(egfr)) flags.push("Renal dosing risk: verify exact regimen in local formulary or pharmacy system before prescribing.");
+      if (egfr === "Dialysis / RRT") flags.push("Renal replacement therapy: use RRT-specific dosing guidance or pharmacy review.");
+      if (["Low body weight", "Obesity / high body weight", "Pediatric", "Pregnancy"].includes(weight)) flags.push(`${weight}: avoid adult default dosing assumptions and use the relevant specialist reference.`);
+      if (["ICU / severe", "Sepsis or shock"].includes(severity)) flags.push("Severe infection: loading strategy, altered volume of distribution, infusion approach, and source control may require senior or ID/pharmacy input.");
+      if (culture === "Known resistant / MDR risk") flags.push("MDR signal: confirm the indication, approval pathway, state antibiogram context, and de-escalation trigger.");
+      if (["Vancomycin", "Aminoglycoside"].includes(drug.name)) flags.push("TDM required: do not proceed without the local monitoring protocol.");
+      if (["Azithromycin", "Amoxicillin-clavulanic acid"].includes(drug.name) && ["OPD / mild", "Admitted / moderate"].includes(severity)) flags.push("Common misuse pattern: do not use 1-2 day symptom response alone to hop between azithromycin and amoxicillin-clavulanate. Reassess syndrome, severity, expected response time, and whether an antibiotic is indicated at all.");
+      if (culture === "Pending") flags.push("Pending cultures or no diagnostics: define the review point before starting, and avoid switching antibiotic classes unless there is deterioration, toxicity, allergy, or a clearer diagnosis.");
+      const sourceSteps = [
+        "Open the approved institutional formulary or e-prescribing protocol for exact dose, interval, route, infusion duration, maximum dose, and contraindications.",
+        "Cross-check the syndrome pathway and state antibiogram before empirical broad-spectrum use.",
+        "Document indication, planned duration, review date, and culture follow-up owner."
+      ];
+      const switchFramework = [
+        "Stop when bacterial infection is not supported or prophylaxis/treatment target is complete.",
+        "Continue only when the syndrome, response, and planned duration still support therapy.",
+        "Switch route when stable, improving, and tolerating oral therapy.",
+        "Narrow when cultures, susceptibility, and clinical response allow de-escalation.",
+        "Escalate only for clinical deterioration, high-risk syndrome, source-control issue, toxicity/allergy, or microbiology that justifies broader therapy."
+      ];
+      const html = `
+        <div class="result-title"><span>Dosing review for ${drug.name}</span><span class="badge">No dose generated</span></div>
+        <div class="rec-line"><span class="rec-ico">A</span><span><b>Stewardship category:</b> ${drug.aware}</span></div>
+        <div class="rec-line"><span class="rec-ico">S</span><span><b>Syndrome context:</b> ${syndrome} | ${severity} | culture status: ${culture}</span></div>
+        <div class="panel-sub" style="margin-top:14px;"><b>Drug-specific checks</b></div>
+        ${drug.keyChecks.map(c => `<div class="rec-line"><span class="rec-ico">?</span><span>${c}</span></div>`).join("")}
+        <div class="panel-sub" style="margin-top:14px;"><b>Patient-specific risk flags</b></div>
+        ${(flags.length ? flags : ["No major high-risk dosing modifier selected. Still verify exact regimen in the local formulary."]).map(c => `<div class="rec-line"><span class="rec-ico">!</span><span>${c}</span></div>`).join("")}
+        <div class="panel-sub" style="margin-top:14px;"><b>Monitoring and documentation</b></div>
+        ${drug.monitoring.map(c => `<div class="rec-line"><span class="rec-ico">M</span><span>${c}</span></div>`).join("")}
+        <div class="panel-sub" style="margin-top:14px;"><b>Where to get the actual dose</b></div>
+        ${sourceSteps.map(c => `<div class="rec-line"><span class="rec-ico">R</span><span>${c}</span></div>`).join("")}
+        <div class="panel-sub" style="margin-top:14px;"><b>Stop / switch / de-escalate framework</b></div>
+        ${switchFramework.map(c => `<div class="rec-line"><span class="rec-ico">S</span><span>${c}</span></div>`).join("")}
+        <div class="disclaimer">This is a dosing appropriateness checklist, not a dosing calculator. It intentionally does not provide numeric dose, frequency, infusion duration, or maximum dose.</div>`;
+      $("doseReviewResult").innerHTML = html;
+      $("doseReviewResult").classList.add("visible");
+    }
+
+    function clearDosingReview() {
+      ["doseDrug", "doseSyndrome", "doseEgfr", "doseWeight", "doseSeverity", "doseCulture"].forEach(id => $(id).selectedIndex = 0);
+      $("doseReviewResult").classList.remove("visible");
+    }
+
+    function loadPatients() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("santulanAmrCases"));
+        const base = Array.isArray(saved) && saved.length ? saved : [];
+        const known = new Set(base.map(row => row[0]));
+        state.patients = base.concat(demoPatients.filter(row => !known.has(row[0])));
+      } catch (_) {
+        state.patients = demoPatients.slice();
+      }
+      $("reviewBadge").textContent = state.patients.length;
+    }
+
+    function savePatients() {
+      localStorage.setItem("santulanAmrCases", JSON.stringify(state.patients));
+    }
+
+    function renderPatients() {
+      const rows = state.patients.map((p, i) => ({ row: p, index: i })).filter(p => matchesSearch(p.row.join(" ")));
+      $("patientsBody").innerHTML = rows.map(({ row: p, index }) => `<tr><td><b>${p[0]}</b></td><td>${p[1]}</td><td>${p[2]}</td><td>${p[3]}</td><td>${p[4]}</td><td><span class="badge ${p[5] === "Advanced" ? "red" : p[5] === "Intermediate" ? "amber" : "blue"}">${p[5]}</span></td><td><button class="btn" data-review="${index}">Study</button></td></tr>`).join("") || `<tr><td colspan="7"><div class="empty">No matching case studies.</div></td></tr>`;
+    }
+
+    function renderGuidelines() {
+      const filters = ["all", "respiratory", "uti", "sepsis", "aware", "surgery"];
+      $("guidelineFilters").innerHTML = filters.map(f => `<button class="${state.guidelineFilter === f ? "active" : ""}" data-filter="${f}">${f[0].toUpperCase() + f.slice(1)}</button>`).join("");
+      const rows = guidelines.map((g, i) => ({ ...g, index: i })).filter(g => (state.guidelineFilter === "all" || g.group === state.guidelineFilter) && matchesSearch(g.title + g.body + g.source));
+      $("guidelinesList").innerHTML = rows.map(g => {
+        const ref = guidelineReferenceFor(g.referenceKey);
+        return `<div class="item"><span class="dot"></span><div><div class="item-title">${g.title}</div><div class="item-meta">${g.body}</div><div class="item-meta" style="margin-top:6px;"><b>Where in guidance:</b> ${ref.section}</div><div style="margin-top:8px;"><span class="badge">${g.source}</span> <span class="badge blue">${g.badge}</span></div></div><button class="btn" data-guideline="${g.index}">Open</button></div>`;
+      }).join("") || `<div class="empty">No guidelines match the current filter.</div>`;
+    }
+
+    function renderPolicies() {
+      $("policiesGrid").innerHTML = policies.map(p => `<div class="panel pad"><div class="actions" style="justify-content:space-between;"><div class="panel-title">${p[0]}</div><span class="badge ${p[1] === "Mandatory" ? "red" : p[1] === "Preferred" ? "green" : "blue"}">${p[1]}</span></div><div class="panel-sub" style="font-size:13px; margin-top:12px;">${p[2]}</div></div>`).join("");
+    }
+
+    function renderSurveillance() {
+      const restrictedStarts = surveillanceDomains.reduce((sum, row) => sum + row[1], 0);
+      const reviewOverdue = surveillanceDomains.reduce((sum, row) => sum + row[2], 0);
+      const ivOral = surveillanceDomains.reduce((sum, row) => sum + row[3], 0);
+      const cultureAction = Math.round(surveillanceDomains.reduce((sum, row) => sum + row[4], 0) / surveillanceDomains.length);
+      $("surveillanceMetrics").innerHTML = [
+        ["Restricted starts", restrictedStarts, "Carbapenem, colistin, linezolid", "risk"],
+        ["Review checkpoints", reviewOverdue, "48-72h teaching moments", "warn"],
+        ["IV-to-oral scenarios", ivOral, "Stable-case switch examples", "good"],
+        ["Culture-to-action", cultureAction + " h", "State reference benchmark", "warn"]
+      ].map(m => `<div class="metric"><div class="label">${m[0]}</div><div class="value">${m[1]}</div><div class="trend ${m[3]}">${m[2]}</div></div>`).join("");
+
+      const high = surveillanceDomains.filter(row => row[1] >= 5 || row[2] >= 5).length;
+      const watch = surveillanceDomains.filter(row => (row[1] >= 2 || row[2] >= 2) && !(row[1] >= 5 || row[2] >= 5)).length;
+      const stable = surveillanceDomains.length - high - watch;
+      $("riskMixPanel").innerHTML = `<div class="stacked-bar">
+        <div class="stack-segment" data-tier="High"><h3>High</h3><div class="stack-value">${high}</div><div class="stack-meta">State domains that should anchor advanced teaching cases.</div></div>
+        <div class="stack-segment" data-tier="Watch"><h3>Watch</h3><div class="stack-value">${watch}</div><div class="stack-meta">Domains suitable for routine case-based teaching.</div></div>
+        <div class="stack-segment" data-tier="Stable"><h3>Stable</h3><div class="stack-value">${stable}</div><div class="stack-meta">Lower-pressure reference domains for comparison.</div></div>
+      </div>`;
+
+      $("cultureTrendPanel").innerHTML = `<div class="mini-chart">${surveillanceDomains.map(row => {
+        const level = row[4] >= 30 ? "high" : row[4] >= 18 ? "watch" : "stable";
+        return `<div class="mini-bar" data-level="${level}" style="height:${Math.max(18, row[4] * 2)}px" title="${row[0]}: ${row[4]}h"><span>${row[0]}</span></div>`;
+      }).join("")}</div><div class="disclaimer">State benchmark trend used for teaching; replace with validated state surveillance data during implementation.</div>`;
+
+      $("wardHeatmap").innerHTML = `<div class="heat-head">Ward</div><div class="heat-head">MDR pressure</div><div class="heat-head">Restricted use</div><div class="heat-head">Safety monitoring</div><div class="heat-head">Action delay</div>` +
+        wardDomainHeat.map(row => `<div class="heat-label"><strong>${row[0]}</strong><span>State teaching slice</span></div>${row[1].map((level, i) => `<div class="heat-cell" data-level="${level}"><strong>${level.toUpperCase()}</strong><span>${row[2][i]}</span></div>`).join("")}`).join("");
+    }
+
+    function renderAudit() {
+      $("auditBody").innerHTML = auditRows.filter(r => matchesSearch(r.join(" "))).map(r => `<tr>${r.map((c, i) => `<td>${i === 4 ? `<span class="badge ${c === "Accepted" ? "green" : "amber"}">${c}</span>` : c}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="6"><div class="empty">No matching audit rows.</div></td></tr>`;
+    }
+
+    function renderLearning() {
+      const rows = modules.map((m, i) => ({ row: m, index: i })).filter(m => matchesSearch(m.row.join(" ")));
+      $("learningGrid").innerHTML = rows.map(({ row: m, index }) => `<button class="module-card module-button" data-module="${index}"><div class="module-top"><div class="module-icon">${index + 1}</div><span class="badge ${m[3] === "CME" ? "green" : "blue"}">${m[3]}</span></div><div class="module-title">${m[0]}</div><div class="module-desc">${m[1]}</div><div class="progress"><span style="width:${m[2]}%"></span></div><div class="item-meta">${m[2]}% complete</div></button>`).join("") || `<div class="empty">No learning modules match the search.</div>`;
+    }
+
+    function openModal(title, sub, body) {
+      $("modalTitle").textContent = title;
+      $("modalSub").textContent = sub || "";
+      $("modalBody").innerHTML = body;
+      $("modalBackdrop").classList.add("visible");
+    }
+
+    function render() {
+      renderMetrics();
+      renderDashboard();
+      renderContextSignals();
+      renderDoseNotes();
+      renderPatients();
+      renderSensitivity();
+      renderGuidelines();
+      renderPolicies();
+      renderSurveillance();
+      renderAudit();
+      renderLearning();
+    }
+
+    function csvEscape(value) {
+      const text = String(value ?? "");
+      return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+    }
+
+    function exportReviewCases() {
+      const rows = [["Case", "Setting", "Syndrome", "Teaching focus", "Journey stage", "Level"]].concat(state.patients);
+      const csv = rows.map(row => row.map(csvEscape).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "santulanamr-case-study-reading-list.csv";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      toast("Reading list exported.");
+    }
+
+    function downloadModuleCertificate(index) {
+      const module = modules[Number(index)];
+      if (!module) return;
+      const text = [
+        "SantulanAMR Learning Certificate",
+        `Module: ${module[0]}`,
+        `Category: ${module[3]}`,
+        `Progress: ${module[2]}%`,
+        "Status: Training record placeholder for prototype review"
+      ].join("\n");
+      const blob = new Blob([text], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `santulanamr-${module[0].toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-certificate.txt`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      toast("Certificate downloaded.");
+    }
+
+    function renderCaseTrend(patientId) {
+      const trajectory = caseTrajectories[patientId] || {
+        synopsis: "Curated case synopsis not yet entered.",
+        culture: "State antibiogram and culture context will be provided with this case.",
+        action: "Study the guideline pathway and compare decisions against state susceptibility patterns.",
+        learning: ["Identify syndrome and severity.", "Check empirical therapy against the state antibiogram.", "Define culture review and de-escalation points."],
+        markers: [["D0", 18, "watch"], ["D1", 14, "stable"], ["D2", 11, "stable"], ["D3", 8, "stable"]]
+      };
+      const max = Math.max(...trajectory.markers.map(item => item[1]), 1);
+      return `<div class="rec-line"><span class="rec-ico">S</span><span><b>Synopsis:</b> ${trajectory.synopsis}</span></div>
+        <div class="rec-line"><span class="rec-ico">A</span><span><b>Antibiogram/culture context:</b> ${trajectory.culture}</span></div>
+        <div class="rec-line"><span class="rec-ico">G</span><span><b>Guidance focus:</b> ${trajectory.action}</span></div>
+        ${trajectory.learning.map(item => `<div class="rec-line"><span class="rec-ico">?</span><span>${item}</span></div>`).join("")}
+        <div class="mini-chart">${trajectory.markers.map(item => `<div class="mini-bar" data-level="${item[2]}" style="height:${Math.max(18, (item[1] / max) * 88)}px" title="${item[0]}: CRP ${item[1]}"><span>${item[0]}</span></div>`).join("")}</div>
+        <div class="disclaimer">This is a curated educational journey, not an actual patient file. State antibiogram values should be updated from the validated state dataset.</div>`;
+    }
+
+    function bindEvents() {
+      document.querySelectorAll("[data-view]").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.view)));
+      document.querySelectorAll("[data-jump]").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.jump)));
+      $("menuBtn").addEventListener("click", () => $("sidebar").classList.toggle("open"));
+      $("recommendBtn").addEventListener("click", getRecommendation);
+      $("clearRecBtn").addEventListener("click", clearRecommendation);
+      $("openCaseLibraryBtn").addEventListener("click", openCaseLibrary);
+      $("doseReviewBtn").addEventListener("click", runDosingReview);
+      $("doseClearBtn").addEventListener("click", clearDosingReview);
+      $("exportCasesBtn").addEventListener("click", exportReviewCases);
+      $("seedCasesBtn").addEventListener("click", () => { state.patients = demoPatients.slice(); savePatients(); renderPatients(); $("reviewBadge").textContent = state.patients.length; toast("Curated cases restored."); });
+      $("globalSearch").addEventListener("input", e => { state.search = norm(e.target.value); render(); });
+      ["sensDrug", "sensState", "sensYear", "sensOrganism", "sensSpecimen"].forEach(id => {
+        const el = $(id);
+        if (!el) return;
+        el.addEventListener("change", e => {
+          const key = id === "sensDrug" ? "antibiotic" : id.replace("sens", "").toLowerCase();
+          state.sensitivity[key] = e.target.value;
+          renderSensitivity();
+        });
+      });
+      $("guidelineFilters").addEventListener("click", e => {
+        if (!e.target.dataset.filter) return;
+        state.guidelineFilter = e.target.dataset.filter;
+        renderGuidelines();
+      });
+      document.body.addEventListener("click", e => {
+        const alert = e.target.closest("[data-alert]");
+        const review = e.target.dataset.review;
+        const guide = e.target.dataset.guideline;
+        const module = e.target.closest("[data-module]");
+        const startModule = e.target.dataset.startModule;
+        const certificate = e.target.dataset.certificate;
+        if (alert) {
+          const target = alertTargets[Number(alert.dataset.alert)] || "dashboard";
+          setView(target);
+          toast(`Opened ${views[target][0]}.`);
+        }
+        if (review !== undefined) {
+          const p = state.patients[Number(review)];
+          openModal("Study " + p[0], p[1] + " - " + p[2], `<div class="rec-line"><span class="rec-ico">T</span><span><b>Teaching focus:</b> ${p[3]}</span></div><div class="rec-line"><span class="rec-ico">J</span><span><b>Journey stage:</b> ${p[4]}</span></div><div class="rec-line"><span class="rec-ico">L</span><span><b>Level:</b> ${p[5]}</span></div>${renderCaseTrend(p[0])}<div class="actions" style="margin-top:28px;"><button class="btn primary" onclick="toast('Marked as studied.')">Mark studied</button><button class="btn" onclick="toast('Reflection prompt opened.')">Reflection prompt</button></div>`);
+        }
+        if (guide !== undefined) {
+          const g = guidelines[Number(guide)];
+          const ref = guidelineReferenceFor(g.referenceKey);
+          openModal(g.title, g.source + " - " + g.badge, `<p class="item-meta" style="font-size:14px;">${g.body}</p><div class="rec-line"><span class="rec-ico">P</span><span><b>Pathway:</b> ${ref.pathway}</span></div><div class="rec-line"><span class="rec-ico">S</span><span><b>Guideline section:</b> ${ref.section}</span></div><div class="rec-line"><span class="rec-ico">R</span><span><b>Rationale:</b> ${ref.rationale}</span></div><div class="panel-sub" style="margin-top:14px;"><b>Key checks</b></div>${ref.checkpoints.map(c => `<div class="rec-line"><span class="rec-ico">?</span><span>${c}</span></div>`).join("")}<div class="panel-sub" style="margin-top:14px;"><b>Read more</b></div>${renderReferenceCards(ref)}<div class="disclaimer">Production deployment should also attach local policy PDFs, version dates, approval owner, and next review date.</div>`);
+        }
+        if (module) {
+          const m = modules[Number(module.dataset.module)];
+          openModal(m[0], m[3] + " module", `<p class="item-meta" style="font-size:14px;">${m[1]}</p><div class="progress"><span style="width:${m[2]}%"></span></div><div class="actions" style="margin-top:16px;"><button class="btn primary" data-start-module="${module.dataset.module}">Start module</button><button class="btn" data-certificate="${module.dataset.module}">Download certificate</button></div>`);
+        }
+        if (startModule !== undefined) {
+          const m = modules[Number(startModule)];
+          toast(`${m[0]} launched.`);
+        }
+        if (certificate !== undefined) {
+          downloadModuleCertificate(certificate);
+        }
+      });
+      $("modalClose").addEventListener("click", () => $("modalBackdrop").classList.remove("visible"));
+      $("modalBackdrop").addEventListener("click", e => { if (e.target === $("modalBackdrop")) $("modalBackdrop").classList.remove("visible"); });
+    }
+
+    populateSelects();
+    loadPatients();
+    bindEvents();
+    render();
+  </script>
+</body>
+</html>
