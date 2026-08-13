@@ -81,7 +81,7 @@
       border-bottom: 1px solid var(--line);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .brand-logo {
       width: 104px;
@@ -129,16 +129,6 @@
     .nav-item:hover { background: #fff7f0; color: var(--ink); }
     .nav-item.active { background: #FF8B28; color: #fff; font-weight: 820; box-shadow: 0 10px 26px rgba(255, 139, 40, .32); }
     .nav-item.active .badge { background: rgba(255,255,255,.2); color: #fff; }
-    .nav-ico {
-      width: 22px;
-      height: 22px;
-      border: 1px solid currentColor;
-      border-radius: 6px;
-      display: grid;
-      place-items: center;
-      font-size: 11px;
-      flex: 0 0 auto;
-    }
     .badge {
       display: inline-flex;
       align-items: center;
@@ -898,20 +888,20 @@
       <nav>
         <div class="nav-block">
           <div class="nav-label">Clinical</div>
-          <button class="nav-item active" data-view="dashboard"><span class="nav-ico">D</span>Dashboard</button>
-          <button class="nav-item" data-view="recommend"><span class="nav-ico">GL</span>Guideline Recommendation</button>
-          <button class="nav-item" data-view="dose"><span class="nav-ico">Rx</span>Dosing Safety</button>
-          <button class="nav-item" data-view="patients"><span class="nav-ico">CS</span>Case Studies <span class="badge amber" id="reviewBadge">5</span></button>
+          <button class="nav-item active" data-view="dashboard">Dashboard</button>
+          <button class="nav-item" data-view="recommend">Guideline Recommendation</button>
+          <button class="nav-item" data-view="dose">Dosing Safety</button>
+          <button class="nav-item" data-view="patients">Case Studies <span class="badge amber" id="reviewBadge">5</span></button>
         </div>
         <div class="nav-block">
           <div class="nav-label">Reference</div>
-          <button class="nav-item" data-view="sensitivity"><span class="nav-ico">%</span>State Antibiogram</button>
-          <button class="nav-item" data-view="guidelines"><span class="nav-ico">G</span>Guidelines</button>
+          <button class="nav-item" data-view="sensitivity">State Antibiogram</button>
+          <button class="nav-item" data-view="guidelines">Guidelines</button>
         </div>
         <div class="nav-block">
           <div class="nav-label">Programme</div>
-          <button class="nav-item" data-view="surveillance"><span class="nav-ico">M</span>AMR Surveillance</button>
-          <button class="nav-item" data-view="learning"><span class="nav-ico">L</span>E-Learning</button>
+          <button class="nav-item" data-view="surveillance">AMR Surveillance</button>
+          <button class="nav-item" data-view="learning">E-Learning</button>
         </div>
       </nav>
       <div class="persona">
