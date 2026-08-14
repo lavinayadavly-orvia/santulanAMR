@@ -251,6 +251,22 @@
     .top-title { font-size: 21px; font-weight: 800; letter-spacing: 0; }
     .top-title { color: var(--ink); }
     .top-sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .mentor-button {
+      min-height: 40px;
+      padding: 9px 13px;
+      border: 1px solid rgba(var(--theme-rgb), .24);
+      border-radius: 8px;
+      background: var(--theme);
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 820;
+      white-space: nowrap;
+      box-shadow: 0 10px 24px rgba(var(--theme-rgb), .18);
+    }
+    .mentor-button:hover {
+      background: var(--theme-hover);
+    }
     .global-search {
       width: min(430px, 42vw);
       display: flex;
@@ -1488,8 +1504,9 @@
 	      .sidebar.open { transform: translateX(0); }
 	      body.sidebar-collapsed .sidebar { transform: translateX(calc(-100% + 48px)); }
 	      body.sidebar-collapsed .sidebar.open { transform: translateX(0); }
-	      .topbar { height: auto; min-height: 68px; }
+      .topbar { height: auto; min-height: 68px; }
       .topbar-inner { flex-wrap: wrap; min-height: 68px; padding: 12px 14px; }
+      .mentor-button { order: 2; flex: 1; }
       .global-search { width: 100%; order: 3; }
       .content { padding: 16px; }
       .home-view { margin: 0; }
@@ -1517,6 +1534,7 @@
     }
     @media (max-width: 560px) {
       .topbar-inner { gap: 10px; }
+      .mentor-button { width: 100%; }
       .home-content { grid-template-columns: minmax(0, 50%) minmax(0, 50%); }
       .home-left { padding: 24px 12px; }
       .home-eyebrow { font-size: 10px; }
@@ -1591,11 +1609,12 @@
 	      <header class="topbar">
 	        <div class="topbar-inner">
 	          <div class="title-wrap">
-            <div class="top-title" id="viewTitle">SantulanAMR</div>
-            <div class="top-sub" id="viewSub">Stewardship cockpit</div>
-          </div>
-          <form class="global-search" id="globalSearchForm" role="search">
-            <button type="submit">Search</button>
+	            <div class="top-title" id="viewTitle">SantulanAMR</div>
+	            <div class="top-sub" id="viewSub">Stewardship cockpit</div>
+	          </div>
+	          <button class="mentor-button" id="mentorBtn">Guidance from Mentors</button>
+	          <form class="global-search" id="globalSearchForm" role="search">
+	            <button type="submit">Search</button>
             <input id="globalSearch" type="search" placeholder="drug, organism, condition, case">
           </form>
         </div>
@@ -2889,6 +2908,39 @@
       $("modalBackdrop").classList.add("visible");
     }
 
+    function openMentorGuidance() {
+      openModal("Guidance from Mentors", "Route a difficult stewardship question to a seasoned HCP/KOL", `
+        <form id="mentorRequestForm" class="case-study">
+          <div class="case-summary-grid">
+            <div class="field"><label for="mentorRole">Your role</label><select id="mentorRole" required><option>CP</option><option>PCP</option><option>HCP</option><option>Other clinician</option></select></div>
+            <div class="field"><label for="mentorUrgency">Urgency</label><select id="mentorUrgency" required><option>Routine teaching query</option><option>Need response today</option><option>Urgent clinical discussion</option></select></div>
+            <div class="field"><label for="mentorTopic">Topic</label><select id="mentorTopic" required><option>Empirical antibiotic choice</option><option>De-escalation or switch</option><option>Antibiogram interpretation</option><option>Dosing safety reference</option><option>Antibiotic hopping or premature stop</option><option>Other stewardship question</option></select></div>
+          </div>
+          <div class="field full"><label for="mentorContext">Case context</label><textarea id="mentorContext" required placeholder="Summarise syndrome, severity, setting, culture status, state antibiogram issue, and current antibiotic concern. Do not enter patient identifiers."></textarea></div>
+          <div class="field full"><label for="mentorQuestion">Question for mentor</label><textarea id="mentorQuestion" required placeholder="What decision are you stuck on? For example: empirical choice, whether to narrow, when to stop, when to switch, or what guideline section to review."></textarea></div>
+          <div class="case-section"><h4>Routing note</h4><p>In a live backend, this request can be sent to a configured mentor group or KOL panel with the selected urgency, topic, and de-identified case context.</p></div>
+          <div class="disclaimer">Platform Demo Interface: this prototype prepares the mentor query but does not send it to a server. Do not enter patient names, phone numbers, addresses, identifiers, or free-text details that could identify a person.</div>
+          <div class="actions" style="margin-top:4px;"><button class="btn primary" type="submit">Prepare mentor query</button><button class="btn" type="button" onclick="document.getElementById('modalBackdrop').classList.remove('visible')">Cancel</button></div>
+        </form>
+      `);
+    }
+
+    function submitMentorQuery() {
+      openModal("Mentor query prepared", "Ready for live backend routing", `
+        <div class="case-study">
+          <section class="case-section"><h4>What happens next</h4><p>The live version would send this de-identified stewardship question to the configured mentor/KOL queue, attach the selected urgency and topic, and record the response for learning follow-up.</p></section>
+          <div class="case-decision-grid">
+            <div class="case-decision">Recommended backend route: mentor/KOL triage queue.</div>
+            <div class="case-decision">Required safety check: remove identifiers before submission.</div>
+            <div class="case-decision">Suggested turnaround: based on urgency selected by the doctor.</div>
+            <div class="case-decision">Response format: guideline section, rationale, and stewardship decision options.</div>
+          </div>
+          <div class="disclaimer">Demo mode only: no query has been sent.</div>
+        </div>
+      `);
+      toast("Mentor query prepared.");
+    }
+
     function render() {
       renderMetrics();
       renderDashboard();
@@ -3027,6 +3079,7 @@
       document.querySelectorAll("[data-view]").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.view)));
       document.querySelectorAll("[data-jump]").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.jump)));
       $("menuBtn").addEventListener("click", toggleSidebar);
+      $("mentorBtn").addEventListener("click", openMentorGuidance);
       if (window.addEventListener) {
         window.addEventListener("resize", syncSidebarToggle);
       }
@@ -3108,6 +3161,12 @@
         }
         if (certificate !== undefined) {
           downloadModuleCertificate(certificate);
+        }
+      });
+      document.body.addEventListener("submit", e => {
+        if (e.target?.id === "mentorRequestForm") {
+          e.preventDefault();
+          submitMentorQuery();
         }
       });
       $("modalClose").addEventListener("click", () => $("modalBackdrop").classList.remove("visible"));
