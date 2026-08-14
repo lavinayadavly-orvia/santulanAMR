@@ -1817,7 +1817,7 @@
                 <div class="field"><label for="doseDrug">Drug or therapy</label><select id="doseDrug"></select></div>
                 <div class="field"><label for="doseSyndrome">Syndrome</label><select id="doseSyndrome"></select></div>
                 <div class="field"><label for="doseEgfr">eGFR / CrCl band</label><select id="doseEgfr"><option>Not entered</option><option>Normal or mildly reduced</option><option>30-59</option><option>15-29</option><option>&lt;15</option><option>Dialysis / RRT</option></select></div>
-                <div class="field"><label for="doseWeight">Weight context</label><select id="doseWeight"><option>Standard adult</option><option>Low body weight</option><option>Obesity / high body weight</option><option>Pediatric</option><option>Pregnancy</option></select></div>
+                <div class="field"><label for="doseWeight">Weight context</label><select id="doseWeight"><option>Standard adult</option><option>Low body weight</option><option>Obesity / high body weight</option><option>Paediatric</option><option>Pregnancy</option></select></div>
                 <div class="field"><label for="doseSeverity">Clinical context</label><select id="doseSeverity"><option>OPD / mild</option><option>Admitted / moderate</option><option>ICU / severe</option><option>Sepsis or shock</option><option>Prophylaxis</option></select></div>
                 <div class="field"><label for="doseCulture">Culture status</label><select id="doseCulture"><option>Pending</option><option>Known susceptible</option><option>Known resistant / MDR risk</option><option>Not indicated</option></select></div>
               </div>
@@ -1961,7 +1961,7 @@
             </div>
             <div class="panel pad">
               <div class="panel-title">Culture-to-action Trend</div>
-              <div class="panel-sub">Median hours from culture finalization to stewardship action.</div>
+              <div class="panel-sub">Median hours from culture finalisation to stewardship action.</div>
               <div id="cultureTrendPanel"></div>
             </div>
           </div>
@@ -2121,11 +2121,11 @@
       },
       "Hospital-acquired pneumonia": {
         pathway: "Nosocomial pneumonia -> HAP/VAP pathway -> local antibiogram and MDR-risk review",
-        section: "Microbiologic sampling, empiric regimen selection using local resistance data, MRSA/MDR risk factors, de-escalation, and duration review.",
+        section: "Microbiological sampling, empirical regimen selection using local resistance data, MRSA/MDR risk factors, de-escalation, and duration review.",
         rationale: "HAP/VAP guidance explicitly emphasizes local antibiograms and narrowing therapy once cultures and clinical trajectory allow.",
         checkpoints: ["Confirm hospital-acquired timing and whether VAP applies.", "Obtain respiratory and blood cultures when feasible.", "Use ICU/ward-specific susceptibility data if available.", "Add MRSA or dual gram-negative coverage only when risk justifies it.", "De-escalate based on culture results and response."],
         sources: [
-          { name: "ATS/IDSA HAP/VAP guideline", part: "Microbiologic methods; initial empiric treatment; local antibiogram recommendations; pathogen-specific therapy", url: "https://www.idsociety.org/practice-guideline/hap_vap/" },
+          { name: "ATS/IDSA HAP/VAP guideline", part: "Microbiological methods; initial empirical treatment; local antibiogram recommendations; pathogen-specific therapy", url: "https://www.idsociety.org/practice-guideline/hap_vap/" },
           { name: "ICMR common syndrome guidance", part: "Hospital-acquired respiratory infection pathway", url: "https://www.icmr.gov.in/guidelines" },
           { name: "WHO AWaRe antibiotic book", part: "Hospital infection and Reserve/Watch antibiotic stewardship context", url: "https://www.who.int/publications/i/item/9789240062382" }
         ]
@@ -2154,7 +2154,7 @@
         pathway: "Sepsis pathway -> cultures/source search -> empirical coverage -> early de-escalation",
         section: "Sepsis recognition, culture collection, source control, broad empirical coverage when indicated, MDR/MRSA risk assessment, and 48-72 hour review.",
         rationale: "Sepsis guidance balances urgent empirical treatment with diagnostic sampling, source control, and early de-escalation when data return.",
-        checkpoints: ["Recognize shock or organ dysfunction early.", "Send cultures if this does not delay urgent treatment.", "Identify likely source and source-control needs.", "Escalate only for severity/MDR risk.", "Schedule mandatory culture and de-escalation review."],
+        checkpoints: ["Recognise shock or organ dysfunction early.", "Send cultures if this does not delay urgent treatment.", "Identify likely source and source-control needs.", "Escalate only for severity/MDR risk.", "Schedule mandatory culture and de-escalation review."],
         sources: [
           { name: "ICMR common syndrome guidance", part: "Sepsis / bloodstream infection syndrome pathway", url: "https://www.icmr.gov.in/guidelines" },
           { name: "WHO AWaRe antibiotic book", part: "Severe infection stewardship and Reserve antibiotic context", url: "https://www.who.int/publications/i/item/9789240062382" }
@@ -2214,7 +2214,7 @@
         name: "Meropenem",
         aware: "Watch / restricted broad-spectrum",
         keyChecks: ["Use only when MDR risk, severity, or culture data justifies carbapenem therapy.", "Renal adjustment may be required.", "Document approval route and de-escalation trigger."],
-        monitoring: ["Renal function", "Culture finalization", "Seizure/CNS risk", "48-72 hour stewardship review"]
+        monitoring: ["Renal function", "Culture finalisation", "Seizure/CNS risk", "48-72 hour stewardship review"]
       },
       {
         name: "Piperacillin-tazobactam",
@@ -2287,7 +2287,7 @@
           "What new information would permit narrowing?",
           "How would renal function or source-control failure change the plan?"
         ],
-        learning: ["Recognize MDR risk factors before empirical therapy.", "Use state antibiogram data without ignoring patient-specific severity.", "Plan a 48-72 hour de-escalation checkpoint from the start."],
+        learning: ["Recognise MDR risk factors before empirical therapy.", "Use state antibiogram data without ignoring patient-specific severity.", "Plan a 48-72 hour de-escalation checkpoint from the start."],
         markers: [["D0", 46, "high"], ["D1", 38, "high"], ["D2", 22, "watch"], ["D3", 14, "stable"]]
       },
       "CASE-02": {
@@ -2345,7 +2345,7 @@
           "Who owns the stop date on the ward round?",
           "What harm is created by extending prophylaxis casually?"
         ],
-        learning: ["Separate surgical prophylaxis from active infection management.", "Apply stop-date rules.", "Recognize how unnecessary exposure drives resistance."],
+        learning: ["Separate surgical prophylaxis from active infection management.", "Apply stop-date rules.", "Recognise how unnecessary exposure drives resistance."],
         markers: [["D0", 6, "stable"], ["D1", 5, "stable"], ["D2", 5, "stable"], ["D3", 4, "stable"]]
       },
       "CASE-04": {
@@ -2412,21 +2412,21 @@
       ["ICU", 7, 4, 2, 18],
       ["Medicine", 3, 6, 5, 32],
       ["Surgery", 1, 7, 9, 46],
-      ["Pediatrics", 0, 2, 3, 12]
+      ["Paediatrics", 0, 2, 3, 12]
     ];
 
     const wardDomainHeat = [
       ["ICU", ["high", "high", "watch", "watch"], ["CRE / CRAB", "Reserve starts", "Renal toxicity", "De-escalation overdue"]],
       ["Medicine", ["watch", "watch", "stable", "high"], ["ESBL risk", "Watch antibiotic use", "Monitoring stable", "IV-to-oral overdue"]],
       ["Surgery", ["stable", "watch", "stable", "high"], ["Low MDR signal", "Prophylaxis duration", "Monitoring stable", "Stop-date missing"]],
-      ["Pediatrics", ["stable", "stable", "watch", "stable"], ["Low MDR signal", "Access preferred", "Dose check", "Review current"]]
+      ["Paediatrics", ["stable", "stable", "watch", "stable"], ["Low MDR signal", "Access preferred", "Dose check", "Review current"]]
     ];
 
     const modules = [
       ["Stewardship foundations", "Core principles, governance, audit cycles, and practical ward workflows.", 100, "CME"],
       ["Interpreting antibiograms", "Breakpoints, isolate counts, syndrome relevance, and empirical therapy selection.", 60, "Skill"],
       ["AWaRe in daily practice", "Access, Watch, Reserve categories and prescribing reports.", 35, "CME"],
-      ["PK/PD optimization", "Time-dependent and concentration-dependent antibiotic exposure.", 20, "Advanced"],
+      ["PK/PD optimisation", "Time-dependent and concentration-dependent antibiotic exposure.", 20, "Advanced"],
       ["MDR gram-negative infections", "ESBL, CRE, CRAB risk assessment and escalation logic.", 0, "CME"],
       ["De-escalation and IV-to-oral switch", "How to narrow, stop, or switch therapy after clinical review.", 80, "Skill"],
       ["Antibiotic hopping in OPD practice", "Tier-2 city scenarios: 2-day switches, early stopping, counselling, review points, and guideline reset.", 10, "Core"]
@@ -2733,7 +2733,7 @@
         ["Renal replacement therapy", "Do not rely on simple eGFR adjustment. Use pharmacy or specialist dosing guidance."],
         ["Vancomycin / aminoglycosides", "Require therapeutic drug monitoring and local monitoring protocols."],
         ["Critical illness", "Loading doses, augmented renal clearance, obesity, and infusion strategy may need specialist review."],
-        ["Pediatrics / pregnancy", "Use dedicated dosing references and senior review; adult shortcuts are unsafe."],
+        ["Paediatrics / pregnancy", "Use dedicated dosing references and senior review; adult shortcuts are unsafe."],
         ["Restricted antibiotics", "Reserve agents should have documented indication, approval pathway, and stop/review date."]
       ];
       $("doseSafetyChecklist").innerHTML = checklist.map(n => `<div class="item"><span class="dot blue"></span><div><div class="item-title">${n[0]}</div><div class="item-meta">${n[1]}</div></div></div>`).join("");
@@ -2752,7 +2752,7 @@
       const flags = [];
       if (["15-29", "<15", "Dialysis / RRT"].includes(egfr)) flags.push("Renal dosing risk: verify exact regimen in local formulary or pharmacy system before prescribing.");
       if (egfr === "Dialysis / RRT") flags.push("Renal replacement therapy: use RRT-specific dosing guidance or pharmacy review.");
-      if (["Low body weight", "Obesity / high body weight", "Pediatric", "Pregnancy"].includes(weight)) flags.push(`${weight}: avoid adult default dosing assumptions and use the relevant specialist reference.`);
+      if (["Low body weight", "Obesity / high body weight", "Paediatric", "Pregnancy"].includes(weight)) flags.push(`${weight}: avoid adult default dosing assumptions and use the relevant specialist reference.`);
       if (["ICU / severe", "Sepsis or shock"].includes(severity)) flags.push("Severe infection: loading strategy, altered volume of distribution, infusion approach, and source control may require senior or ID/pharmacy input.");
       if (culture === "Known resistant / MDR risk") flags.push("MDR signal: confirm the indication, approval pathway, state antibiogram context, and de-escalation trigger.");
       if (["Vancomycin", "Aminoglycoside"].includes(drug.name)) flags.push("TDM required: do not proceed without the local monitoring protocol.");
@@ -3073,7 +3073,7 @@
         <section class="case-section"><h4>Journey timeline</h4><div class="case-timeline">${trajectory.timeline.map(item => `<div class="case-timepoint"><div class="case-day">${escapeHtml(item[0])}</div><div>${escapeHtml(item[1])}</div></div>`).join("")}</div></section>
         <section class="case-section"><h4>Antibiogram and culture interpretation</h4><p>${escapeHtml(trajectory.culture)}</p></section>
         <section class="case-section"><h4>Guideline anchor</h4><p>${escapeHtml(trajectory.guideline)}</p></section>
-        <section class="case-section"><h4>Stewardship decisions to practice</h4><div class="case-decision-grid">${trajectory.decisions.map(item => `<div class="case-decision">${escapeHtml(item)}</div>`).join("")}</div></section>
+        <section class="case-section"><h4>Stewardship decision practice</h4><div class="case-decision-grid">${trajectory.decisions.map(item => `<div class="case-decision">${escapeHtml(item)}</div>`).join("")}</div></section>
         <section class="case-section"><h4>Learning checklist</h4>${renderCaseList(trajectory.learning)}</section>
         <section class="case-section"><h4>Discussion prompts</h4>${renderCaseList(trajectory.discussion, true)}</section>
         <section class="case-section"><h4>Response trend for discussion</h4><div class="mini-chart">${trajectory.markers.map(item => `<div class="mini-bar" data-level="${escapeHtml(item[2])}" style="height:${Math.max(18, (item[1] / max) * 88)}px" title="${escapeHtml(item[0])}: CRP ${escapeHtml(item[1])}"><span>${escapeHtml(item[0])}</span></div>`).join("")}</div></section>
