@@ -407,9 +407,7 @@
     .home-visual {
       position: relative;
       min-height: calc(100vh - 78px);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.76), rgba(var(--theme-rgb), .07)),
-        #fff;
+      background: #fff;
       overflow: hidden;
       border-radius: 0;
     }
@@ -419,17 +417,7 @@
       min-height: calc(100vh - 78px);
       object-fit: cover;
       object-position: center;
-      mix-blend-mode: multiply;
       display: block;
-    }
-    .home-visual::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(var(--theme-rgb), .10), transparent 30%),
-        linear-gradient(180deg, rgba(255,255,255,.38), transparent 42%, rgba(var(--theme-rgb), .05));
-      pointer-events: none;
     }
     .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
     .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
@@ -1716,10 +1704,7 @@
 
     const dashboardThemes = {
       clinical: { label: "Clinical Teal", color: "#1f6f73", rgb: "31, 111, 115", hover: "#185c60", soft: "#e8f3f2" },
-      slate: { label: "Slate Blue", color: "#315f86", rgb: "49, 95, 134", hover: "#294f70", soft: "#eaf1f7" },
-      sage: { label: "Sage", color: "#607c4f", rgb: "96, 124, 79", hover: "#526b43", soft: "#eef4ea" },
-      clay: { label: "Warm Clay", color: "#a35f2f", rgb: "163, 95, 47", hover: "#8a5028", soft: "#f6eee8" },
-      steel: { label: "Steel", color: "#56616f", rgb: "86, 97, 111", hover: "#48515d", soft: "#eef1f3" }
+      slate: { label: "Slate Blue", color: "#315f86", rgb: "49, 95, 134", hover: "#294f70", soft: "#eaf1f7" }
     };
 
     const views = {
