@@ -407,7 +407,7 @@
         linear-gradient(135deg, rgba(255,255,255,.64), rgba(var(--theme-rgb), .10)),
         #fff;
       overflow: hidden;
-      border-radius: 0 0 0 56px;
+      border-radius: 0;
     }
     .home-visual img {
       width: 100%;
@@ -1694,11 +1694,11 @@
     };
 
     const dashboardThemes = {
-      orange: { label: "Orange", color: "#FF8B28", rgb: "255, 139, 40", hover: "#ff9c45", soft: "#fff0e2" },
-      teal: { label: "Teal", color: "#0E9F8F", rgb: "14, 159, 143", hover: "#12b8a5", soft: "#e7f7f4" },
-      blue: { label: "Blue", color: "#3267A8", rgb: "50, 103, 168", hover: "#3e79c2", soft: "#e7eef8" },
-      charcoal: { label: "Charcoal", color: "#17231F", rgb: "23, 35, 31", hover: "#24352f", soft: "#eef1f0" },
-      green: { label: "Green", color: "#4F7F38", rgb: "79, 127, 56", hover: "#5f9444", soft: "#e8f1e2" }
+      orange: { label: "Apricot", color: "#FF8B28", rgb: "255, 139, 40", hover: "#ff9c45", soft: "#fff0e2" },
+      mint: { label: "Mint", color: "#6FCF97", rgb: "111, 207, 151", hover: "#5fbd87", soft: "#edf9f1" },
+      sky: { label: "Sky", color: "#6EA8FE", rgb: "110, 168, 254", hover: "#5c97ee", soft: "#edf4ff" },
+      lilac: { label: "Lilac", color: "#A78BFA", rgb: "167, 139, 250", hover: "#9678ed", soft: "#f3efff" },
+      sage: { label: "Sage", color: "#8BCB72", rgb: "139, 203, 114", hover: "#79b963", soft: "#f0f8ec" }
     };
 
     const views = {
@@ -2041,7 +2041,11 @@
     }
 
     function applyDashboardTheme() {
-      const theme = dashboardThemes[state.dashboardTheme] || dashboardThemes.orange;
+      if (!dashboardThemes[state.dashboardTheme]) {
+        state.dashboardTheme = "orange";
+        localStorage.setItem("santulanAmrDashboardTheme", state.dashboardTheme);
+      }
+      const theme = dashboardThemes[state.dashboardTheme];
       if (document.documentElement?.style) {
         document.documentElement.style.setProperty("--theme", theme.color);
         document.documentElement.style.setProperty("--theme-rgb", theme.rgb);
