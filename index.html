@@ -1482,7 +1482,7 @@
                 <div class="home-copy">
                   <div class="home-eyebrow">SantulanAMR</div>
                   <h1 class="home-title">Welcome, Dr Annpurna Gaggar</h1>
-                  <p class="home-sub">What would you like to do today? Choose a case, open guideline support, review state real-world data, or continue stewardship learning.</p>
+                  <p class="home-sub">What would you like to do today? Choose a case, open guideline support, review real-world state data, or continue stewardship learning.</p>
                   <div class="home-mini-row">
                     <span class="home-mini">OPD + stewardship ready</span>
                     <span class="home-mini">State AMR context</span>
@@ -1504,7 +1504,7 @@
                   </button>
                   <button class="home-option" data-jump="surveillance">
                     <div class="home-option-top"><span class="home-option-tag">Programme</span><span class="home-option-arrow">></span></div>
-                    <div><h3>Check AMR surveillance</h3><p>See how uploaded aggregate data becomes teaching and stewardship signals.</p></div>
+                    <div><h3>Check AMR surveillance</h3><p>See how aggregate uploads become teaching and stewardship signals.</p></div>
                   </button>
                 </div>
                 <div class="home-followup" aria-label="Today on SantulanAMR">
@@ -1521,7 +1521,7 @@
                   <div class="home-note">
                     <span>Data</span>
                     <strong>State antibiogram context</strong>
-                    <p>Compare organism-drug sensitivity before choosing case therapy.</p>
+                    <p>Compare organism-drug sensitivity before choosing therapy in a case.</p>
                   </div>
                 </div>
               </div>
@@ -1764,7 +1764,7 @@
             <div class="intake-panel">
               <div>
                 <div class="panel-title">How AMR Tracking Starts</div>
-                <div class="panel-sub">Surveillance is built from uploaded aggregate antibiogram and stewardship files. This page should show where the state, hospital, or programme team provides the data before trends are interpreted.</div>
+                <div class="panel-sub">Surveillance is built from aggregate antibiogram and stewardship files uploaded by the state, hospital, or programme team before trends are interpreted.</div>
                 <div class="intake-steps">
                   <div class="intake-step"><b>1</b><span><strong>Upload state or hospital data</strong><br>Use antibiogram extracts, organism-drug sensitivity files, and optional stewardship review logs.</span></div>
                   <div class="intake-step"><b>2</b><span><strong>Validate and de-identify</strong><br>Exclude patient/sample identifiers; keep only aggregate fields needed for resistance and teaching signals.</span></div>
@@ -1776,7 +1776,7 @@
                   <label for="surveillanceUpload">Upload surveillance file</label>
                   <input id="surveillanceUpload" type="file" accept=".csv,.xlsx,.xls">
                 </div>
-                <div class="field-note">Static demo mode: this upload explains the intake flow and validates the file name locally. Production deployment should connect this control to the approved state/hospital data pipeline.</div>
+                <div class="field-note">Demo mode: this upload explains the intake flow and validates the file name locally. In a live deployment, this control connects to the approved state or hospital data pipeline.</div>
                 <div class="actions" style="margin-top:12px;">
                   <button class="btn primary" id="reviewUploadBtn">Review upload readiness</button>
                   <button class="btn" id="downloadSurveillanceTemplateBtn">Download CSV template</button>
@@ -1863,7 +1863,7 @@
       search: ["Search Results", "Matches across cases, guidelines, learning, and real-world AMR data"],
       dashboard: ["Dashboard", "Institutional antimicrobial stewardship overview"],
       recommend: ["Guideline Recommendation", "Institutional and evidence-based antimicrobial guidance"],
-      dose: ["Dosing Safety", "Non-calculating antibiotic dosing safety reference"],
+      dose: ["Dosing Safety", "Antibiotic dosing safety reference without dose calculation"],
       patients: ["Case Studies", "Curated patient journeys for stewardship training"],
       sensitivity: ["State Antibiogram - Real World Data", "Aggregate organism-drug susceptibility from uploaded state data"],
       guidelines: ["Guidelines", "Syndrome-based treatment guidance"],
@@ -2661,7 +2661,7 @@
         `Module: ${module[0]}`,
         `Category: ${module[3]}`,
         `Progress: ${module[2]}%`,
-        "Status: Training record placeholder for prototype review"
+        "Status: Demo training record"
       ].join("\n");
       const blob = new Blob([text], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
@@ -2679,10 +2679,10 @@
       const input = $("surveillanceUpload");
       const file = input?.files?.[0];
       if (!file) {
-        openModal("Upload readiness", "AMR surveillance intake", `<p class="item-meta" style="font-size:14px;">Choose a CSV or Excel file first. The expected input is aggregate surveillance data, not patient-level files.</p><div class="rec-line"><span class="rec-ico">1</span><span>Use the template fields: state, facility, ward, period, organism, specimen, drug, S/I/R result, and isolate count.</span></div><div class="rec-line"><span class="rec-ico">2</span><span>Remove patient identifiers, sample IDs, phone numbers, names, addresses, and free-text notes before ingestion.</span></div><div class="rec-line"><span class="rec-ico">3</span><span>In production, this upload should route to the approved state or hospital validation workflow before dashboards update.</span></div>`);
+        openModal("Upload readiness", "AMR surveillance intake", `<p class="item-meta" style="font-size:14px;">Choose a CSV or Excel file first. The expected input is aggregate surveillance data, not patient-level files.</p><div class="rec-line"><span class="rec-ico">1</span><span>Use the template fields: state, facility, ward, period, organism, specimen, drug, S/I/R result, and isolate count.</span></div><div class="rec-line"><span class="rec-ico">2</span><span>Remove patient identifiers, sample IDs, phone numbers, names, addresses, and free-text notes before ingestion.</span></div><div class="rec-line"><span class="rec-ico">3</span><span>In a live workflow, this upload routes to the approved state or hospital validation process before dashboards update.</span></div>`);
         return;
       }
-      openModal("Upload readiness", file.name, `<p class="item-meta" style="font-size:14px;">This file is selected locally for review. Static demo mode does not upload it to a server.</p><div class="rec-line"><span class="rec-ico">F</span><span><b>File:</b> ${file.name}</span></div><div class="rec-line"><span class="rec-ico">S</span><span><b>Size:</b> ${(file.size / 1024).toFixed(1)} KB</span></div><div class="rec-line"><span class="rec-ico">N</span><span><b>Next step:</b> connect this control to the validated ingestion service that parses, de-identifies, approves, and publishes aggregate AMR signals.</span></div>`);
+      openModal("Upload readiness", file.name, `<p class="item-meta" style="font-size:14px;">This file is selected locally for review. Demo mode does not upload it to a server.</p><div class="rec-line"><span class="rec-ico">F</span><span><b>File:</b> ${file.name}</span></div><div class="rec-line"><span class="rec-ico">S</span><span><b>Size:</b> ${(file.size / 1024).toFixed(1)} KB</span></div><div class="rec-line"><span class="rec-ico">N</span><span><b>Next step:</b> connect this control to the validated ingestion service that parses, de-identifies, approves, and publishes aggregate AMR signals.</span></div>`);
     }
 
     function downloadSurveillanceTemplate() {
