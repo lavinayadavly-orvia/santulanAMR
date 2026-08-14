@@ -1252,7 +1252,7 @@
     @media (max-width: 1100px) {
       .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .home-content { grid-template-columns: 1fr; align-items: start; }
+      .home-content { grid-template-columns: minmax(0, .96fr) minmax(0, 1.04fr); align-items: stretch; }
       .wide-layout, .dashboard-workspace { grid-template-columns: 1fr; }
       .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .global-search { width: min(360px, 36vw); }
@@ -1283,14 +1283,18 @@
       .content { padding: 16px; }
       .home-view { margin: 0; }
       .home-shell { min-height: auto; padding: 0; }
-      .home-content { min-height: auto; gap: 24px; }
-      .home-left { padding: 28px 22px 0; }
+      .home-content {
+        grid-template-columns: minmax(0, .96fr) minmax(0, 1.04fr);
+        min-height: calc(100vh - 112px);
+        gap: 0;
+      }
+      .home-left { padding: 28px 22px; }
       .home-visual,
-      .home-visual img { min-height: 360px; border-radius: 0; }
+      .home-visual img { min-height: calc(100vh - 112px); border-radius: 0; }
       .home-visual { border-radius: 0; }
       .home-tagline {
         bottom: 48px;
-        font-size: clamp(21px, 7vw, 30px);
+        font-size: clamp(18px, 4vw, 28px);
       }
       .quick-grid, .priority-layout { grid-template-columns: 1fr; }
       .home-options { grid-template-columns: 1fr; }
@@ -1301,8 +1305,14 @@
       .item > .actions { grid-column: 2; }
     }
     @media (max-width: 560px) {
-      .home-left { padding: 24px 16px 0; }
-      .home-title { font-size: 34px; }
+      .home-left { padding: 24px 16px; }
+      .home-title { font-size: 28px; }
+      .home-sub { font-size: 13px; }
+      .home-mini { font-size: 11px; min-height: 30px; padding: 6px 10px; }
+      .home-option { min-height: 62px; padding: 9px 0; }
+      .home-option h3 { font-size: 13px; }
+      .home-option p { font-size: 11px; }
+      .home-tagline { left: 18px; right: 18px; bottom: 36px; font-size: 19px; }
       .home-option { align-items: flex-start; }
       .home-option-top { align-self: flex-start; }
       .metric { min-height: auto; }
