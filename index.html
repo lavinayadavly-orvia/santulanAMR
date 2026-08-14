@@ -411,6 +411,7 @@
       margin: 0;
       font-size: 15px;
       line-height: 1.2;
+      overflow-wrap: anywhere;
     }
     .home-option p {
       margin: 4px 0 0;
@@ -1266,7 +1267,7 @@
     @media (max-width: 1040px) {
       .content { width: 100%; }
       .home-view { margin: 0; }
-      .home-left { padding: 36px 32px 0; }
+      .home-left { padding: 36px 32px; justify-content: flex-start; }
       .home-visual,
       .home-visual img { min-height: 420px; }
       .hero-board, .priority-layout, .filter-panel { grid-template-columns: 1fr; }
@@ -1311,14 +1312,21 @@
       .item > .actions { grid-column: 2; }
     }
     @media (max-width: 560px) {
-      .home-left { padding: 24px 16px; }
-      .home-title { font-size: 28px; }
-      .home-sub { font-size: 13px; }
-      .home-mini { font-size: 11px; min-height: 30px; padding: 6px 10px; }
-      .home-option { min-height: 62px; padding: 9px 0; }
-      .home-option h3 { font-size: 13px; }
-      .home-option p { font-size: 11px; }
-      .home-tagline { left: 18px; right: 18px; bottom: 36px; font-size: 22px; }
+      .topbar-inner { gap: 10px; }
+      .home-content { grid-template-columns: minmax(0, 50%) minmax(0, 50%); }
+      .home-left { padding: 24px 12px; }
+      .home-eyebrow { font-size: 10px; }
+      .home-title { font-size: 22px; line-height: 1.08; margin-bottom: 10px; }
+      .home-sub { font-size: 11px; line-height: 1.35; }
+      .home-mini-row { gap: 6px; margin-top: 12px; }
+      .home-mini { font-size: 9px; min-height: 25px; padding: 5px 8px; }
+      .home-options { gap: 4px; margin-top: 14px; }
+      .home-option { min-height: 44px; padding: 7px 0; gap: 8px; }
+      .home-option h3 { font-size: 11px; }
+      .home-option p { display: none; }
+      .home-option-tag { font-size: 8px; letter-spacing: .06em; }
+      .home-option-arrow { width: 22px; height: 22px; font-size: 11px; }
+      .home-tagline { left: 16px; right: 16px; bottom: 34px; font-size: 18px; }
       .home-option { align-items: flex-start; }
       .home-option-top { align-self: flex-start; }
       .metric { min-height: auto; }
