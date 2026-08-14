@@ -233,6 +233,9 @@
     .persona span { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
 
     .main { min-width: 0; }
+    body.sidebar-collapsed .main {
+      min-width: 0;
+    }
     .topbar {
       min-height: 78px;
       border-bottom: 1px solid var(--line);
@@ -246,7 +249,8 @@
       min-height: 78px;
       width: 100%;
       margin: 0 auto;
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) auto minmax(300px, 430px);
       align-items: center;
       gap: 16px;
       padding: 0 28px;
@@ -258,6 +262,7 @@
     .top-sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
     .mentor-button {
       min-height: 40px;
+      width: 220px;
       padding: 9px 13px;
       border: 1px solid rgba(var(--theme-rgb), .24);
       border-radius: 8px;
@@ -273,7 +278,7 @@
       background: var(--theme-hover);
     }
     .global-search {
-      width: min(430px, 42vw);
+      width: 100%;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -492,7 +497,8 @@
       height: 100%;
       min-height: calc(100vh - 78px);
       object-fit: contain;
-      object-position: center bottom;
+      object-position: center center;
+      transform: scale(1.08);
       display: block;
     }
     .home-followup {
@@ -1473,21 +1479,22 @@
       border-radius: 8px;
       background: #fff;
     }
-    @media (max-width: 1180px) {
-      :root { --nav: 232px; }
-      .content { padding: 22px; }
-      .topbar-inner { padding: 0 22px; }
-      .brand-logo { width: 96px; }
-      .nav-item { font-size: 14px; }
-    }
-    @media (max-width: 1100px) {
-      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .home-content { grid-template-columns: minmax(0, .96fr) minmax(0, 1.04fr); align-items: stretch; }
-      .wide-layout, .dashboard-workspace { grid-template-columns: 1fr; }
-      .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .global-search { width: min(360px, 36vw); }
-    }
+	    @media (max-width: 1180px) {
+	      :root { --nav: 232px; }
+	      .content { padding: 22px; }
+	      .topbar-inner { padding: 0 22px; }
+	      .brand-logo { width: 96px; }
+	      .nav-item { font-size: 14px; }
+	    }
+	    @media (max-width: 1100px) {
+	      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	      .home-content { grid-template-columns: minmax(0, .96fr) minmax(0, 1.04fr); align-items: stretch; }
+	      .wide-layout, .dashboard-workspace { grid-template-columns: 1fr; }
+	      .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	      .topbar-inner { grid-template-columns: minmax(170px, 1fr) 210px minmax(260px, 360px); }
+	      .mentor-button { width: 210px; }
+	    }
 	    @media (max-width: 1040px) {
 	      .content { width: 100%; }
 	      .home-view { margin: 0; }
@@ -1498,6 +1505,8 @@
 	    }
 	    @media (max-width: 980px) {
 	      .app { grid-template-columns: 1fr; }
+	      .main { padding-left: 48px; }
+	      .sidebar.open + .main { padding-left: 0; }
 	      .sidebar {
 	        position: fixed;
 	        z-index: 30;
@@ -1516,9 +1525,9 @@
 	      body.sidebar-collapsed .sidebar { transform: translateX(calc(-100% + 48px)); }
 	      body.sidebar-collapsed .sidebar.open { transform: translateX(0); }
 	      .topbar { height: auto; min-height: 68px; }
-      .topbar-inner { flex-wrap: wrap; min-height: 68px; padding: 12px 14px; }
-      .mentor-button { order: 2; flex: 1; }
-      .global-search { width: 100%; order: 3; }
+	      .topbar-inner { grid-template-columns: minmax(160px, 1fr) 200px; min-height: 68px; padding: 12px 14px; }
+	      .mentor-button { width: 200px; }
+	      .global-search { grid-column: 1 / -1; }
       .content { padding: 16px; }
       .home-view { margin: 0; }
       .home-shell { min-height: auto; padding: 0; }
@@ -1544,8 +1553,9 @@
       .item > .actions { grid-column: 2; }
     }
     @media (max-width: 560px) {
-      .topbar-inner { gap: 10px; }
-      .mentor-button { width: 100%; }
+	      .topbar-inner { gap: 10px; }
+	      .topbar-inner { grid-template-columns: 1fr; }
+	      .mentor-button { width: 100%; }
       .home-content { grid-template-columns: minmax(0, 50%) minmax(0, 50%); }
       .home-left { padding: 24px 12px; }
       .home-eyebrow { font-size: 10px; }
