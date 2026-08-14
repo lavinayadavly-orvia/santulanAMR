@@ -859,6 +859,96 @@
     }
     .rec-line b { color: #10211f; }
     .rec-ico { color: var(--teal); font-weight: 900; text-align: center; }
+    .case-study {
+      display: grid;
+      gap: 14px;
+    }
+    .case-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .case-fact,
+    .case-section {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .case-fact {
+      padding: 10px 12px;
+      min-height: 72px;
+    }
+    .case-fact span,
+    .case-section h4 {
+      display: block;
+      margin: 0 0 6px;
+      color: var(--theme-hover);
+      font-size: 11px;
+      font-weight: 880;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .case-fact strong {
+      display: block;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .case-section {
+      padding: 12px 14px;
+    }
+    .case-section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .case-section ul,
+    .case-section ol {
+      margin: 8px 0 0 18px;
+      padding: 0;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .case-section li + li { margin-top: 5px; }
+    .case-timeline {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .case-timepoint {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfb;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .case-day {
+      color: var(--theme);
+      font-weight: 900;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+    .case-decision-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .case-decision {
+      padding: 10px;
+      border-radius: 8px;
+      background: var(--theme-soft);
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.45;
+    }
     .disclaimer {
       color: var(--muted);
       font-size: 11px;
@@ -1328,7 +1418,7 @@
     }
     .modal-backdrop.visible { display: flex; }
     .modal {
-      width: min(760px, 100%);
+      width: min(980px, 100%);
       max-height: min(760px, 90vh);
       overflow: auto;
       background: var(--panel);
@@ -1418,6 +1508,8 @@
       .quick-grid, .priority-layout { grid-template-columns: 1fr; }
       .home-options { grid-template-columns: 1fr; }
       .grid-4, .grid-3, .grid-2, .form-grid, .dose-output, .stacked-bar, .filter-panel, .reference-grid, .dashboard-metrics, .dashboard-hero, .continue-panel, .intake-panel, .schema-grid { grid-template-columns: 1fr; }
+      .case-summary-grid,
+      .case-decision-grid { grid-template-columns: 1fr; }
       .hero-actions { grid-template-columns: 1fr; }
       .timeline-row { grid-template-columns: 1fr; }
       .item { grid-template-columns: auto 1fr; }
@@ -2141,36 +2233,146 @@
     const caseTrajectories = {
       "CASE-01": {
         synopsis: "A critically ill adult presents with septic shock after recent healthcare exposure. Initial broad-spectrum therapy is started while cultures are pending.",
+        patient: "Older adult, ICU admission, septic shock after recent healthcare exposure.",
+        syndrome: "Sepsis - unknown source with MDR gram-negative risk.",
+        antibiotics: "Empirical meropenem started after cultures; vancomycin considered only if MRSA risk is credible.",
+        labs: "Hypotension requiring vasopressor support, rising inflammatory markers, blood cultures positive by Day 1.",
         culture: "Blood culture grows ESBL E. coli. State antibiogram shows high third-generation cephalosporin resistance but retained susceptibility to amikacin and piperacillin-tazobactam in selected isolates.",
         action: "Study when meropenem is justified, when it can be narrowed, and how clinical stability/source control affect the decision.",
+        timeline: [
+          ["D0", "Cultures sent before antibiotics where feasible; septic shock triggers urgent empirical broad-spectrum therapy."],
+          ["D1", "Blood culture flags gram-negative bacilli. Team confirms recent admission and prior antibiotic exposure as MDR risk factors."],
+          ["D2", "ESBL E. coli reported. Review source control, susceptibility, renal risk, and whether current therapy is still justified."],
+          ["D3", "Clinical status improves. Decide whether to continue, narrow, or step down based on susceptibility and source control."]
+        ],
+        decisions: [
+          "Do not use the antibiogram alone to choose therapy; first decide severity, source, and MDR risk.",
+          "Document why a Reserve antibiotic is being used and when it will be reviewed.",
+          "De-escalate when culture, susceptibility, source control, and clinical trajectory support it.",
+          "Avoid adding duplicate gram-negative or MRSA coverage without a defined reason."
+        ],
+        guideline: "Sepsis pathway: early cultures when feasible, urgent empirical therapy for shock, source control, and mandatory 48-72 hour review.",
+        discussion: [
+          "What facts justified initial escalation?",
+          "What new information would permit narrowing?",
+          "How would renal function or source-control failure change the plan?"
+        ],
         learning: ["Recognize MDR risk factors before empirical therapy.", "Use state antibiogram data without ignoring patient-specific severity.", "Plan a 48-72 hour de-escalation checkpoint from the start."],
         markers: [["D0", 46, "high"], ["D1", 38, "high"], ["D2", 22, "watch"], ["D3", 14, "stable"]]
       },
       "CASE-02": {
         synopsis: "An adult with moderate community-acquired pneumonia is admitted for oxygen requirement and fever.",
+        patient: "Adult admitted from the community with fever, cough, oxygen requirement, and no ICU criteria at presentation.",
+        syndrome: "Community-acquired pneumonia, moderate severity.",
+        antibiotics: "Empirical beta-lactam plus atypical coverage considered according to CAP pathway and local resistance context.",
+        labs: "Chest imaging supports pneumonia; blood cultures negative; respiratory sample is non-diagnostic.",
         culture: "Blood cultures remain negative. Respiratory sample is non-diagnostic. State antibiogram supports beta-lactam use for likely respiratory pathogens.",
         action: "Study empirical CAP therapy, atypical coverage, clinical stability criteria, and when to switch to oral therapy.",
+        timeline: [
+          ["D0", "Assess severity, site of care, oxygen need, comorbidities, and atypical coverage indications."],
+          ["D1", "Review fever curve, oxygen requirement, cultures, and adverse-effect risk."],
+          ["D2", "Patient stabilizes. Decide whether IV-to-oral switch criteria are met."],
+          ["D3", "Plan total duration based on clinical response and guideline-supported minimum duration."]
+        ],
+        decisions: [
+          "Avoid broadening therapy only because fever persists for the first 24-48 hours.",
+          "Use clinical stability, not habit, to decide IV-to-oral switch.",
+          "Set a duration target early and reassess daily.",
+          "Reserve fluoroquinolone use for situations where local policy and patient factors support it."
+        ],
+        guideline: "CAP pathway: severity assessment, empirical selection, atypical coverage only when indicated, IV-to-oral switch, and duration review.",
+        discussion: [
+          "Which stability criteria must be met before oral switch?",
+          "When is atypical coverage justified?",
+          "What would make this no longer a standard CAP case?"
+        ],
         learning: ["Match syndrome severity to empirical regimen.", "Avoid unnecessary prolonged broad-spectrum therapy.", "Define response criteria before extending duration."],
         markers: [["D0", 31, "watch"], ["D1", 24, "watch"], ["D2", 12, "stable"], ["D3", 8, "stable"]]
       },
       "CASE-03": {
         synopsis: "A stable post-operative patient continues cefazolin beyond the usual prophylaxis window despite no evidence of infection.",
+        patient: "Post-operative adult, clinically stable, afebrile, no localizing features of active infection.",
+        syndrome: "Surgical prophylaxis review, not active infection treatment.",
+        antibiotics: "Cefazolin continued after surgery despite no treatment indication.",
+        labs: "No culture indicated for routine prophylaxis; no documented evidence of active infection.",
         culture: "No culture is indicated because this is prophylaxis, not treatment. State resistance context reinforces avoiding unnecessary antibiotic exposure.",
         action: "Study the difference between prophylaxis and treatment, and how stop dates prevent avoidable antibiotic days.",
+        timeline: [
+          ["Pre-op", "Confirm approved prophylaxis agent, timing, redosing criteria, and allergy history."],
+          ["D0", "Administer prophylaxis within the institutional surgical window."],
+          ["D1", "Check whether prophylaxis stop criteria have been met."],
+          ["D2", "If no infection is present, stop prophylaxis instead of extending by default."]
+        ],
+        decisions: [
+          "Do not convert prophylaxis into treatment without a documented infection syndrome.",
+          "A stop date is part of the antibiotic order, not an optional note.",
+          "Avoid cultures or antibiotics for noninfectious post-operative findings unless clinical criteria support infection.",
+          "Escalation requires new clinical evidence, not post-operative anxiety."
+        ],
+        guideline: "Surgical prophylaxis pathway: correct agent, timing, intraoperative redosing if indicated, and protocol-defined stop.",
+        discussion: [
+          "What finding would justify changing from prophylaxis to treatment?",
+          "Who owns the stop date on the ward round?",
+          "What harm is created by extending prophylaxis casually?"
+        ],
         learning: ["Separate surgical prophylaxis from active infection management.", "Apply stop-date rules.", "Recognize how unnecessary exposure drives resistance."],
         markers: [["D0", 6, "stable"], ["D1", 5, "stable"], ["D2", 5, "stable"], ["D3", 4, "stable"]]
       },
       "CASE-04": {
         synopsis: "A patient with urinary symptoms has prior fluoroquinolone-resistant isolates and current culture pending.",
+        patient: "Adult with dysuria and fever history; prior urine isolate showed fluoroquinolone resistance.",
+        syndrome: "UTI assessment: distinguish uncomplicated cystitis from pyelonephritis or complicated UTI.",
+        antibiotics: "Avoid empirical ciprofloxacin when prior resistance and state antibiogram both argue against it.",
+        labs: "Urine culture sent before antibiotics where feasible; assess obstruction, catheter, pregnancy, male sex, and immunocompromise.",
         culture: "Urine culture is pending. State antibiogram shows low ciprofloxacin susceptibility for common uropathogens.",
         action: "Study how state antibiogram data changes empirical UTI choices and when oral narrow-spectrum agents are preferred.",
+        timeline: [
+          ["Visit", "Classify syndrome and severity before selecting an antibiotic."],
+          ["Same day", "Send urine culture when pyelonephritis, complicated UTI, recurrence, or resistance risk is present."],
+          ["48h", "Review symptoms and culture status; do not switch blindly if no deterioration is present."],
+          ["Final", "Narrow, stop, or continue based on susceptibility and syndrome fit."]
+        ],
+        decisions: [
+          "Do not use fluoroquinolones casually when local susceptibility is poor.",
+          "Prior cultures are patient-specific antibiogram signals.",
+          "Nitrofurantoin may be suitable for cystitis but not for pyelonephritis.",
+          "Escalate only for severity, resistance, allergy, toxicity, or source-control concerns."
+        ],
+        guideline: "UTI pathway: syndrome classification, culture indications, local uropathogen susceptibility, oral narrowing, and duration review.",
+        discussion: [
+          "Is this cystitis, pyelonephritis, or complicated UTI?",
+          "Which prior culture results should change empirical choice?",
+          "When should culture pending lead to watchful review rather than antibiotic hopping?"
+        ],
         learning: ["Avoid fluoroquinolones for uncomplicated UTI when better options exist.", "Use prior cultures and state susceptibility patterns.", "Narrow once culture results return."],
         markers: [["D0", 28, "watch"], ["D1", 19, "watch"], ["D2", 10, "stable"], ["D3", 7, "stable"]]
       },
       "CASE-05": {
         synopsis: "A patient in a Tier-2 OPD receives azithromycin for 2 days for acute respiratory symptoms, then is moved to amoxicillin-clavulanate because fever persists, then stops treatment after 2 more days when symptoms partially improve.",
+        patient: "Outpatient with acute respiratory symptoms, no documented bacterial syndrome, and repeated short antibiotic exposure.",
+        syndrome: "OPD respiratory illness with antibiotic hopping and premature stopping.",
+        antibiotics: "Azithromycin for 2 days, then amoxicillin-clavulanate for 2 days, then early self-stop after partial improvement.",
+        labs: "No culture or bacterial diagnostic checkpoint defined; reassessment should focus on syndrome, severity, red flags, and expected symptom course.",
         culture: "No bacterial syndrome was confirmed and no culture or diagnostic checkpoint was defined. State respiratory antibiogram should be used only after deciding that bacterial infection and empirical antibiotic therapy are actually justified.",
         action: "Study how to reset the encounter: confirm likely viral vs bacterial syndrome, assess severity and red flags, avoid antibiotic hopping, explain expected symptom course, and document stop/switch criteria.",
+        timeline: [
+          ["D0", "Patient receives azithromycin without documented bacterial indication, severity, or review plan."],
+          ["D2", "Fever persists. Antibiotic is changed instead of reassessing diagnosis, red flags, adherence, or expected illness course."],
+          ["D4", "Patient stops second antibiotic early after partial improvement, increasing avoidable exposure without completing a defined plan."],
+          ["Revisit", "Doctor resets: confirm syndrome, decide if antibiotics are needed, counsel, document duration, and define return precautions."]
+        ],
+        decisions: [
+          "Antibiotics are generally stopped, continued, switched, narrowed, or escalated; they are not tapered like steroids.",
+          "Do not switch after 48 hours unless deterioration, toxicity, allergy, new microbiology, source-control issue, or wrong diagnosis is identified.",
+          "Counselling is a stewardship intervention: explain expected fever course, warning signs, and when to return.",
+          "If antibiotics are justified, prescribe the right course with a review point and stop date at the first visit."
+        ],
+        guideline: "OPD misuse-correction pathway: confirm bacterial syndrome first, avoid antibiotic hopping, set review criteria, and document stop/switch rules.",
+        discussion: [
+          "What should have been documented before the first antibiotic?",
+          "What should trigger a switch versus reassurance and review?",
+          "How would you explain non-tapering and completion/stop rules to the patient?"
+        ],
         learning: ["Do not switch antibiotics simply because symptoms persist for 24-48 hours without reassessment.", "Antibiotics are not usually tapered; choose stop, continue, IV-to-oral switch, de-escalation, or escalation based on defined criteria.", "When an antibiotic is justified, set duration, review point, safety counselling, and return precautions at the first prescription.", "Use the antibiogram to guide empirical choice only after the syndrome justifies antibiotics."],
         markers: [["D0", 18, "watch"], ["D2", 16, "watch"], ["D4", 21, "high"], ["D7", 9, "stable"]]
       }
@@ -2771,21 +2973,54 @@
       toast("Surveillance template downloaded.");
     }
 
-    function renderCaseTrend(patientId) {
-      const trajectory = caseTrajectories[patientId] || {
+    function renderCaseList(items, ordered = false) {
+      const tag = ordered ? "ol" : "ul";
+      return `<${tag}>${(items || []).map(item => `<li>${escapeHtml(item)}</li>`).join("")}</${tag}>`;
+    }
+
+    function renderCaseStudy(patient) {
+      const trajectory = caseTrajectories[patient[0]] || {
         synopsis: "Curated case synopsis not yet entered.",
+        patient: patient[1],
+        syndrome: patient[2],
+        antibiotics: "Antibiotic exposure and stewardship decision points will be provided with this case.",
+        labs: "Investigation and culture context will be provided with this case.",
         culture: "State antibiogram and culture context will be provided with this case.",
         action: "Study the guideline pathway and compare decisions against state susceptibility patterns.",
+        guideline: "Relevant local and national guideline sections will be attached to this case.",
+        timeline: [["Start", "Identify syndrome and severity."], ["Review", "Check empirical therapy against the state antibiogram."], ["Decision", "Define culture review and de-escalation points."]],
+        decisions: ["Document indication, review date, and stop or switch criteria."],
+        discussion: ["What information would change the antibiotic plan?"],
         learning: ["Identify syndrome and severity.", "Check empirical therapy against the state antibiogram.", "Define culture review and de-escalation points."],
         markers: [["D0", 18, "watch"], ["D1", 14, "stable"], ["D2", 11, "stable"], ["D3", 8, "stable"]]
       };
       const max = Math.max(...trajectory.markers.map(item => item[1]), 1);
-      return `<div class="rec-line"><span class="rec-ico">S</span><span><b>Synopsis:</b> ${trajectory.synopsis}</span></div>
-        <div class="rec-line"><span class="rec-ico">A</span><span><b>Antibiogram/culture context:</b> ${trajectory.culture}</span></div>
-        <div class="rec-line"><span class="rec-ico">G</span><span><b>Guidance focus:</b> ${trajectory.action}</span></div>
-        ${trajectory.learning.map(item => `<div class="rec-line"><span class="rec-ico">?</span><span>${item}</span></div>`).join("")}
-        <div class="mini-chart">${trajectory.markers.map(item => `<div class="mini-bar" data-level="${item[2]}" style="height:${Math.max(18, (item[1] / max) * 88)}px" title="${item[0]}: CRP ${item[1]}"><span>${item[0]}</span></div>`).join("")}</div>
-        <div class="disclaimer">This is a curated educational journey, not an actual patient file. State antibiogram values should be updated from the validated state dataset.</div>`;
+      return `<div class="case-study">
+        <div class="case-summary-grid">
+          <div class="case-fact"><span>Setting</span><strong>${escapeHtml(patient[1])}</strong></div>
+          <div class="case-fact"><span>Syndrome</span><strong>${escapeHtml(patient[2])}</strong></div>
+          <div class="case-fact"><span>Stage</span><strong>${escapeHtml(patient[4])} | ${escapeHtml(patient[5])}</strong></div>
+        </div>
+        <section class="case-section"><h4>Clinical story</h4><p>${escapeHtml(trajectory.synopsis)}</p></section>
+        <div class="case-summary-grid">
+          <div class="case-fact"><span>Patient context</span><strong>${escapeHtml(trajectory.patient)}</strong></div>
+          <div class="case-fact"><span>Current antibiotic issue</span><strong>${escapeHtml(trajectory.antibiotics)}</strong></div>
+          <div class="case-fact"><span>Investigation status</span><strong>${escapeHtml(trajectory.labs)}</strong></div>
+        </div>
+        <section class="case-section"><h4>Journey timeline</h4><div class="case-timeline">${trajectory.timeline.map(item => `<div class="case-timepoint"><div class="case-day">${escapeHtml(item[0])}</div><div>${escapeHtml(item[1])}</div></div>`).join("")}</div></section>
+        <section class="case-section"><h4>Antibiogram and culture interpretation</h4><p>${escapeHtml(trajectory.culture)}</p></section>
+        <section class="case-section"><h4>Guideline anchor</h4><p>${escapeHtml(trajectory.guideline)}</p></section>
+        <section class="case-section"><h4>Stewardship decisions to practise</h4><div class="case-decision-grid">${trajectory.decisions.map(item => `<div class="case-decision">${escapeHtml(item)}</div>`).join("")}</div></section>
+        <section class="case-section"><h4>Learning checklist</h4>${renderCaseList(trajectory.learning)}</section>
+        <section class="case-section"><h4>Discussion prompts</h4>${renderCaseList(trajectory.discussion, true)}</section>
+        <section class="case-section"><h4>Response trend for discussion</h4><div class="mini-chart">${trajectory.markers.map(item => `<div class="mini-bar" data-level="${escapeHtml(item[2])}" style="height:${Math.max(18, (item[1] / max) * 88)}px" title="${escapeHtml(item[0])}: CRP ${escapeHtml(item[1])}"><span>${escapeHtml(item[0])}</span></div>`).join("")}</div></section>
+        <div class="disclaimer">This is a curated educational journey, not an actual patient file. State antibiogram values should be updated from the validated state dataset.</div>
+      </div>`;
+    }
+
+    function renderCaseTrend(patientId) {
+      const patient = state.patients.find(row => row[0] === patientId) || demoPatients.find(row => row[0] === patientId) || [patientId, "Case study", "Syndrome", "Teaching focus", "Journey stage", "Level"];
+      return renderCaseStudy(patient);
     }
 
     function bindEvents() {
@@ -2856,7 +3091,7 @@
         }
         if (review !== undefined) {
           const p = state.patients[Number(review)];
-          openModal("Study " + p[0], p[1] + " - " + p[2], `<div class="rec-line"><span class="rec-ico">T</span><span><b>Teaching focus:</b> ${p[3]}</span></div><div class="rec-line"><span class="rec-ico">J</span><span><b>Journey stage:</b> ${p[4]}</span></div><div class="rec-line"><span class="rec-ico">L</span><span><b>Level:</b> ${p[5]}</span></div>${renderCaseTrend(p[0])}<div class="actions" style="margin-top:28px;"><button class="btn primary" onclick="toast('Marked as studied.')">Mark studied</button><button class="btn" onclick="toast('Reflection prompt opened.')">Reflection prompt</button></div>`);
+          openModal("Study " + p[0], p[1] + " - " + p[2], `${renderCaseStudy(p)}<div class="actions" style="margin-top:18px;"><button class="btn primary" onclick="toast('Marked as studied.')">Mark studied</button><button class="btn" onclick="toast('Reflection prompt opened.')">Reflection prompt</button></div>`);
         }
         if (guide !== undefined) {
           const g = guidelines[Number(guide)];
