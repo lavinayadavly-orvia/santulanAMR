@@ -102,7 +102,6 @@
       border-bottom: 1px solid var(--line);
       display: flex;
       align-items: center;
-      gap: 8px;
     }
     .brand-logo {
       width: 104px;
@@ -122,8 +121,6 @@
       letter-spacing: 0;
       box-shadow: inset 0 -10px 20px rgba(0,0,0,0.12);
     }
-    .brand-title { font-size: 16px; font-weight: 850; letter-spacing: 0; line-height: 1.12; }
-    .brand-sub { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
     .nav-block { padding: 16px 12px 0; }
     .nav-block.direct { padding-top: 12px; }
     .nav-label {
@@ -1425,10 +1422,6 @@
     <aside class="sidebar" id="sidebar">
       <div class="brand">
         <img class="brand-logo" src="assets/logo.svg" alt="THB">
-        <div>
-          <div class="brand-title">SantulanAMR</div>
-          <div class="brand-sub">Stewardship cockpit</div>
-        </div>
       </div>
       <nav>
         <div class="nav-block direct">
@@ -1472,8 +1465,8 @@
         <div class="topbar-inner">
           <button class="btn icon-btn mobile-menu" id="menuBtn" aria-label="Open navigation">=</button>
           <div class="title-wrap">
-            <div class="top-title" id="viewTitle">Dashboard</div>
-            <div class="top-sub" id="viewSub">Institutional antimicrobial stewardship overview</div>
+            <div class="top-title" id="viewTitle">SantulanAMR</div>
+            <div class="top-sub" id="viewSub">Stewardship cockpit</div>
           </div>
           <form class="global-search" id="globalSearchForm" role="search">
             <button type="submit">Search</button>
@@ -2211,8 +2204,8 @@
       $("view-" + state.view).classList.add("active");
       document.body.dataset.view = state.view;
       document.querySelectorAll(".nav-item").forEach(el => el.classList.toggle("active", el.dataset.view === state.view));
-      $("viewTitle").textContent = views[state.view][0];
-      $("viewSub").textContent = views[state.view][1];
+      $("viewTitle").textContent = "SantulanAMR";
+      $("viewSub").textContent = "Stewardship cockpit";
       $("sidebar").classList.remove("open");
       window.scrollTo({ top: 0, behavior: "smooth" });
       render();
