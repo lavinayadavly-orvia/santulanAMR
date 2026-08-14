@@ -6,10 +6,10 @@
   <title>SantulanAMR - Antimicrobial Stewardship App</title>
   <style>
     :root {
-      --theme: #FF8B28;
-      --theme-rgb: 255, 139, 40;
-      --theme-hover: #ff9c45;
-      --theme-soft: #fff0e2;
+      --theme: #1f6f73;
+      --theme-rgb: 31, 111, 115;
+      --theme-hover: #185c60;
+      --theme-soft: #e8f3f2;
       --bg: var(--theme);
       --panel: #ffffff;
       --panel-2: #f7f9f8;
@@ -243,9 +243,9 @@
       border-radius: 0;
       border: 0;
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.82), transparent 28%),
-        radial-gradient(circle at 88% 22%, rgba(255,255,255,.58), transparent 30%),
-        linear-gradient(135deg, rgba(var(--theme-rgb), .22), rgba(var(--theme-rgb), .08));
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.86), transparent 28%),
+        radial-gradient(circle at 88% 22%, rgba(255,255,255,.62), transparent 30%),
+        linear-gradient(135deg, rgba(var(--theme-rgb), .16), rgba(var(--theme-rgb), .05));
       box-shadow: none;
       padding: 0;
       color: var(--ink);
@@ -255,14 +255,14 @@
       content: "";
       position: absolute;
       pointer-events: none;
-      opacity: .34;
+      opacity: .22;
     }
     .home-shell::before {
       inset: 0;
       background:
-        radial-gradient(circle at 22px 22px, rgba(var(--theme-rgb), .22) 0 2px, transparent 3px),
-        linear-gradient(135deg, transparent 44%, rgba(var(--theme-rgb), .14) 45% 46%, transparent 47%),
-        linear-gradient(45deg, transparent 55%, rgba(var(--theme-rgb), .10) 56% 57%, transparent 58%);
+        radial-gradient(circle at 22px 22px, rgba(var(--theme-rgb), .16) 0 2px, transparent 3px),
+        linear-gradient(135deg, transparent 44%, rgba(var(--theme-rgb), .08) 45% 46%, transparent 47%),
+        linear-gradient(45deg, transparent 55%, rgba(var(--theme-rgb), .06) 56% 57%, transparent 58%);
       background-size: 96px 96px;
     }
     .home-shell::after {
@@ -297,7 +297,7 @@
       font-weight: 900;
       letter-spacing: .1em;
       text-transform: uppercase;
-      color: var(--theme);
+      color: var(--theme-hover);
     }
     .home-title {
       margin: 12px 0 14px;
@@ -310,7 +310,7 @@
       color: var(--ink);
       font-size: clamp(18px, 2vw, 24px);
       line-height: 1.25;
-      font-weight: 850;
+      font-weight: 780;
       max-width: 520px;
     }
     .home-sub {
@@ -331,9 +331,9 @@
       align-items: center;
       min-height: 34px;
       padding: 7px 12px;
-      border: 1px solid rgba(var(--theme-rgb), .24);
+      border: 1px solid rgba(var(--theme-rgb), .18);
       border-radius: 999px;
-      background: rgba(255,255,255,.58);
+      background: rgba(255,255,255,.72);
       color: var(--ink);
       font-size: 12px;
       font-weight: 780;
@@ -350,7 +350,7 @@
       padding: 12px 0;
       border-radius: 8px;
       border: 0;
-      border-top: 1px solid rgba(var(--theme-rgb), .22);
+      border-top: 1px solid rgba(var(--theme-rgb), .16);
       background: transparent;
       color: var(--ink);
       text-align: left;
@@ -364,7 +364,7 @@
     }
     .home-option:hover {
       transform: none;
-      background: rgba(255,255,255,.28);
+      background: rgba(255,255,255,.46);
       padding-left: 10px;
       padding-right: 10px;
     }
@@ -388,8 +388,8 @@
       display: grid;
       place-items: center;
       border-radius: 50%;
-      background: var(--theme-soft);
-      color: var(--theme);
+      background: #fff;
+      color: var(--theme-hover);
       font-weight: 900;
     }
     .home-option h3 {
@@ -407,7 +407,7 @@
       position: relative;
       min-height: calc(100vh - 78px);
       background:
-        linear-gradient(135deg, rgba(255,255,255,.64), rgba(var(--theme-rgb), .10)),
+        linear-gradient(135deg, rgba(255,255,255,.76), rgba(var(--theme-rgb), .07)),
         #fff;
       overflow: hidden;
       border-radius: 0;
@@ -426,8 +426,8 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, rgba(var(--theme-rgb), .18), transparent 32%),
-        linear-gradient(180deg, rgba(255,255,255,.28), transparent 42%, rgba(var(--theme-rgb), .08));
+        linear-gradient(90deg, rgba(var(--theme-rgb), .10), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.38), transparent 42%, rgba(var(--theme-rgb), .05));
       pointer-events: none;
     }
     .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
@@ -1702,7 +1702,7 @@
       view: "home",
       guidelineFilter: "all",
       search: "",
-      dashboardTheme: localStorage.getItem("santulanAmrDashboardTheme") || "orange",
+      dashboardTheme: localStorage.getItem("santulanAmrDashboardTheme") || "clinical",
       patients: [],
       sensitivity: {
         source: "All",
@@ -1715,11 +1715,11 @@
     };
 
     const dashboardThemes = {
-      orange: { label: "Apricot", color: "#FF8B28", rgb: "255, 139, 40", hover: "#ff9c45", soft: "#fff0e2" },
-      mint: { label: "Mint", color: "#6FCF97", rgb: "111, 207, 151", hover: "#5fbd87", soft: "#edf9f1" },
-      sky: { label: "Sky", color: "#6EA8FE", rgb: "110, 168, 254", hover: "#5c97ee", soft: "#edf4ff" },
-      lilac: { label: "Lilac", color: "#A78BFA", rgb: "167, 139, 250", hover: "#9678ed", soft: "#f3efff" },
-      sage: { label: "Sage", color: "#8BCB72", rgb: "139, 203, 114", hover: "#79b963", soft: "#f0f8ec" }
+      clinical: { label: "Clinical Teal", color: "#1f6f73", rgb: "31, 111, 115", hover: "#185c60", soft: "#e8f3f2" },
+      slate: { label: "Slate Blue", color: "#315f86", rgb: "49, 95, 134", hover: "#294f70", soft: "#eaf1f7" },
+      sage: { label: "Sage", color: "#607c4f", rgb: "96, 124, 79", hover: "#526b43", soft: "#eef4ea" },
+      clay: { label: "Warm Clay", color: "#a35f2f", rgb: "163, 95, 47", hover: "#8a5028", soft: "#f6eee8" },
+      steel: { label: "Steel", color: "#56616f", rgb: "86, 97, 111", hover: "#48515d", soft: "#eef1f3" }
     };
 
     const views = {
@@ -2063,7 +2063,7 @@
 
     function applyDashboardTheme() {
       if (!dashboardThemes[state.dashboardTheme]) {
-        state.dashboardTheme = "orange";
+        state.dashboardTheme = "clinical";
         localStorage.setItem("santulanAmrDashboardTheme", state.dashboardTheme);
       }
       const theme = dashboardThemes[state.dashboardTheme];
