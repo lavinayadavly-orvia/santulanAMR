@@ -269,9 +269,10 @@
       border-radius: 0;
       border: 0;
       background:
-        linear-gradient(90deg, rgba(255,255,255,.82) 0%, rgba(255,255,255,.46) 48%, rgba(255,255,255,0) 48%),
-        radial-gradient(circle at 16% 18%, rgba(255,255,255,.78), transparent 30%),
-        linear-gradient(135deg, var(--theme-wash), #fbfdfc);
+        linear-gradient(90deg, rgba(255,255,255,.60) 0%, rgba(var(--theme-rgb), .08) 48%, rgba(var(--theme-rgb), .04) 48%),
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,.64), transparent 30%),
+        radial-gradient(circle at 5% 90%, rgba(var(--theme-rgb), .12), transparent 34%),
+        linear-gradient(135deg, var(--theme-soft) 0%, var(--theme-wash) 48%, #fbfdfc 100%);
       box-shadow: none;
       padding: 0;
       color: var(--ink);
@@ -314,7 +315,7 @@
       flex-direction: column;
       justify-content: center;
       min-width: 0;
-      background: linear-gradient(90deg, rgba(255,255,255,.58), rgba(255,255,255,.16));
+      background: linear-gradient(90deg, rgba(255,255,255,.70), rgba(var(--theme-rgb), .08));
     }
     .home-copy {
       max-width: none;
