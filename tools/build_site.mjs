@@ -9,6 +9,7 @@ const files = [
   ["_headers", "_headers"],
   ["assets/logo.svg", "assets/logo.svg"],
   ["assets/community-hero.png", "assets/community-hero.png"],
+  ["assets/community-family-panel.png", "assets/community-family-panel.png"],
   ["data/sensitivity_data.js", "data/sensitivity_data.js"],
   ["data/sensitivity_data.json", "data/sensitivity_data.json"]
 ];
