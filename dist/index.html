@@ -1203,6 +1203,55 @@
       font-weight: 800;
       text-decoration: none;
     }
+    .search-shell {
+      display: grid;
+      gap: 16px;
+    }
+    .search-summary {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .search-summary h2 {
+      margin: 4px 0 6px;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+    .search-summary p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .search-groups {
+      display: grid;
+      gap: 14px;
+    }
+    .search-result {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    .search-result:last-child { border-bottom: 0; }
+    .search-result:hover .item-title { color: var(--theme-hover); }
+    .search-type {
+      color: var(--theme-hover);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
     .timeline { padding: 4px 18px 18px; }
     .timeline-row {
       display: grid;
@@ -1474,6 +1523,17 @@
               </div>
             </div>
           </section>
+        </div>
+
+        <div class="view" id="view-search">
+          <div class="search-shell">
+            <section class="search-summary">
+              <div class="eyebrow">Search</div>
+              <h2 id="searchHeading">Search results</h2>
+              <p id="searchSummary">Enter a drug, organism, condition, case, guideline, or learning topic.</p>
+            </section>
+            <div class="search-groups" id="searchResults"></div>
+          </div>
         </div>
 
         <div class="view" id="view-dashboard">
@@ -1793,6 +1853,7 @@
 
     const views = {
       home: ["Home", "Personal antimicrobial stewardship workspace"],
+      search: ["Search Results", "Matches across cases, guidelines, learning, and real-world AMR data"],
       dashboard: ["Dashboard", "Institutional antimicrobial stewardship overview"],
       recommend: ["Guideline Recommendation", "Institutional and evidence-based antimicrobial guidance"],
       dose: ["Dosing Safety", "Non-calculating antibiotic dosing safety reference"],
@@ -2100,6 +2161,9 @@
     function $(id) { return document.getElementById(id); }
     function norm(value) { return String(value || "").toLowerCase(); }
     function matchesSearch(text) { return !state.search || norm(text).includes(state.search); }
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
+    }
 
     function routeSearch(query) {
       const q = norm(query).trim();
@@ -2110,17 +2174,7 @@
         toast("Search cleared.");
         return;
       }
-      const buckets = [
-        { view: "sensitivity", words: ["antibiogram", "organism", "drug", "sensitivity", "susceptibility", "resistance", "meropenem", "colistin", "amikacin", "ceftriaxone", "klebsiella", "ecoli", "e. coli", "pseudomonas", "blood", "urine"] },
-        { view: "patients", words: ["case", "journey", "patient", "cre", "cap", "icu", "pneumonia", "uti", "sepsis", "opd"] },
-        { view: "recommend", words: ["guideline", "recommendation", "syndrome", "severity", "culture", "empirical", "therapy", "treatment"] },
-        { view: "dose", words: ["dose", "dosing", "renal", "safety", "kidney", "hepatic"] },
-        { view: "surveillance", words: ["surveillance", "upload", "aggregate", "state", "facility", "ward", "monthly"] },
-        { view: "learning", words: ["learning", "module", "cme", "aware", "de-escalation", "switch", "stewardship"] },
-        { view: "guidelines", words: ["icmr", "who", "idsa", "sop", "policy"] }
-      ];
-      const match = buckets.find(bucket => bucket.words.some(word => q.includes(word)));
-      setView(match ? match.view : "dashboard");
+      setView("search");
       toast(`Searching for "${query.trim()}".`);
     }
 
@@ -2500,6 +2554,58 @@
       $("learningGrid").innerHTML = rows.map(({ row: m, index }) => `<button class="module-card module-button" data-module="${index}"><div class="module-top"><div class="module-icon">${index + 1}</div><span class="badge ${m[3] === "CME" ? "green" : "blue"}">${m[3]}</span></div><div class="module-title">${m[0]}</div><div class="module-desc">${m[1]}</div><div class="progress"><span style="width:${m[2]}%"></span></div><div class="item-meta">${m[2]}% complete</div></button>`).join("") || `<div class="empty">No learning modules match the search.</div>`;
     }
 
+    function collectSearchResults() {
+      const q = state.search;
+      if (!q) return [];
+      const includes = text => norm(text).includes(q);
+      const results = [];
+
+      alerts.forEach((row, index) => {
+        if (includes(row.join(" "))) results.push({ type: "Dashboard alert", title: row[1], body: row[2], view: alertTargets[index] || "dashboard" });
+      });
+      state.patients.forEach(row => {
+        if (includes(row.join(" "))) results.push({ type: "Case study", title: row[0], body: `${row[1]} - ${row[2]}. ${row[3]}`, view: "patients" });
+      });
+      guidelines.forEach(row => {
+        if (includes(`${row.title} ${row.body} ${row.source} ${row.group}`)) results.push({ type: "Guideline", title: row.title, body: `${row.body} Source: ${row.source}.`, view: "guidelines" });
+      });
+      modules.forEach(row => {
+        if (includes(row.join(" "))) results.push({ type: "Learning module", title: row[0], body: `${row[1]} ${row[2]}% complete.`, view: "learning" });
+      });
+      sensitivityPayload().records.forEach(row => {
+        if (includes(`${row.organism} ${row.antibiotic} ${row.specimen} ${row.state} ${row.source} ${row.year}`)) {
+          results.push({ type: "State antibiogram", title: `${row.organism} - ${row.antibiotic}`, body: `${row.s_pct}% sensitive, ${row.r_pct}% resistant. ${row.specimen}, ${row.state}, ${row.year}.`, view: "sensitivity" });
+        }
+      });
+
+      const seen = new Set();
+      return results.filter(item => {
+        const key = `${item.type}|${item.title}|${item.body}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      }).slice(0, 40);
+    }
+
+    function renderSearchResults() {
+      const query = $("globalSearch")?.value?.trim() || state.search;
+      const results = collectSearchResults();
+      $("searchHeading").textContent = query ? `Results for "${query}"` : "Search results";
+      $("searchSummary").textContent = query
+        ? `${results.length} match${results.length === 1 ? "" : "es"} found across SantulanAMR.`
+        : "Enter a drug, organism, condition, case, guideline, or learning topic.";
+      $("searchResults").innerHTML = results.length ? `<section class="panel pad">
+        ${results.map(item => `<button class="search-result" data-result-view="${item.view}">
+          <span>
+            <span class="search-type">${escapeHtml(item.type)}</span>
+            <span class="item-title">${escapeHtml(item.title)}</span>
+            <span class="item-meta">${escapeHtml(item.body)}</span>
+          </span>
+          <span class="badge neutral">Open</span>
+        </button>`).join("")}
+      </section>` : `<div class="empty">No results found. Try an organism, drug, condition, case topic, or guideline keyword.</div>`;
+    }
+
     function openModal(title, sub, body) {
       $("modalTitle").textContent = title;
       $("modalSub").textContent = sub || "";
@@ -2517,6 +2623,7 @@
       renderGuidelines();
       renderSurveillance();
       renderLearning();
+      renderSearchResults();
     }
 
     function csvEscape(value) {
@@ -2630,6 +2737,10 @@
           e.currentTarget.value = "";
           routeSearch("");
         }
+      });
+      $("searchResults").addEventListener("click", e => {
+        const result = e.target.closest("[data-result-view]");
+        if (result) setView(result.dataset.resultView);
       });
       $("themeSwatches").addEventListener("click", e => {
         const swatch = e.target.closest("[data-theme]");
