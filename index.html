@@ -313,12 +313,19 @@
       letter-spacing: 0;
     }
     .home-tagline {
-      margin: 0 0 14px;
-      color: var(--ink);
-      font-size: clamp(18px, 2vw, 24px);
-      line-height: 1.25;
-      font-weight: 780;
-      max-width: 520px;
+      position: absolute;
+      left: clamp(24px, 5vw, 56px);
+      right: clamp(24px, 5vw, 56px);
+      bottom: clamp(96px, 14vh, 150px);
+      z-index: 2;
+      margin: 0;
+      color: rgba(255,255,255,.92);
+      font-size: clamp(22px, 3vw, 38px);
+      line-height: 1.12;
+      font-weight: 820;
+      letter-spacing: 0;
+      text-shadow: 0 2px 18px rgba(14, 28, 25, .34);
+      max-width: 540px;
     }
     .home-sub {
       margin: 0;
@@ -416,6 +423,13 @@
       background: #fff;
       overflow: hidden;
       border-radius: 0;
+    }
+    .home-visual::after {
+      content: "";
+      position: absolute;
+      inset: 46% 0 0;
+      background: linear-gradient(180deg, transparent, rgba(18, 38, 34, .38));
+      pointer-events: none;
     }
     .home-visual img {
       width: 100%;
@@ -1274,6 +1288,10 @@
       .home-visual,
       .home-visual img { min-height: 360px; border-radius: 0; }
       .home-visual { border-radius: 0; }
+      .home-tagline {
+        bottom: 48px;
+        font-size: clamp(21px, 7vw, 30px);
+      }
       .quick-grid, .priority-layout { grid-template-columns: 1fr; }
       .home-options { grid-template-columns: 1fr; }
       .grid-4, .grid-3, .grid-2, .form-grid, .dose-output, .stacked-bar, .filter-panel, .reference-grid, .dashboard-metrics, .dashboard-hero, .continue-panel, .intake-panel, .schema-grid { grid-template-columns: 1fr; }
@@ -1364,7 +1382,6 @@
                 <div class="home-copy">
                   <div class="home-eyebrow">SantulanAMR</div>
                   <h1 class="home-title">Welcome Dr Annpurna Gaggar</h1>
-                  <p class="home-tagline">Unfolding AMR nuances for a healthy community</p>
                   <p class="home-sub">What would you like to do today? Choose a case, open guideline support, review state real-world data, or continue stewardship learning.</p>
                   <div class="home-mini-row">
                     <span class="home-mini">OPD + stewardship ready</span>
@@ -1393,6 +1410,7 @@
               </div>
               <div class="home-visual" aria-label="Healthy community illustration">
                 <img src="assets/community-hero.png" alt="Smiling multi-generational community">
+                <p class="home-tagline">Unfolding AMR nuances for a healthy community</p>
               </div>
             </div>
           </section>
