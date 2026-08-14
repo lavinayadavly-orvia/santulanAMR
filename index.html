@@ -219,6 +219,15 @@
       padding: 9px 12px;
       box-shadow: 0 8px 24px rgba(31, 45, 41, .08);
     }
+    .global-search button {
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 650;
+      padding: 0;
+      white-space: nowrap;
+    }
+    .global-search button:hover { color: var(--theme-hover); }
     .global-search input {
       border: 0;
       outline: 0;
@@ -1402,10 +1411,10 @@
             <div class="top-title" id="viewTitle">Dashboard</div>
             <div class="top-sub" id="viewSub">Institutional antimicrobial stewardship overview</div>
           </div>
-          <div class="global-search" role="search">
-            <span aria-hidden="true">Search</span>
+          <form class="global-search" id="globalSearchForm" role="search">
+            <button type="submit">Search</button>
             <input id="globalSearch" type="search" placeholder="drug, organism, condition, case">
-          </div>
+          </form>
         </div>
       </header>
 
@@ -2092,6 +2101,29 @@
     function norm(value) { return String(value || "").toLowerCase(); }
     function matchesSearch(text) { return !state.search || norm(text).includes(state.search); }
 
+    function routeSearch(query) {
+      const q = norm(query).trim();
+      state.search = q;
+      $("globalSearch").value = query.trim();
+      if (!q) {
+        setView("home");
+        toast("Search cleared.");
+        return;
+      }
+      const buckets = [
+        { view: "sensitivity", words: ["antibiogram", "organism", "drug", "sensitivity", "susceptibility", "resistance", "meropenem", "colistin", "amikacin", "ceftriaxone", "klebsiella", "ecoli", "e. coli", "pseudomonas", "blood", "urine"] },
+        { view: "patients", words: ["case", "journey", "patient", "cre", "cap", "icu", "pneumonia", "uti", "sepsis", "opd"] },
+        { view: "recommend", words: ["guideline", "recommendation", "syndrome", "severity", "culture", "empirical", "therapy", "treatment"] },
+        { view: "dose", words: ["dose", "dosing", "renal", "safety", "kidney", "hepatic"] },
+        { view: "surveillance", words: ["surveillance", "upload", "aggregate", "state", "facility", "ward", "monthly"] },
+        { view: "learning", words: ["learning", "module", "cme", "aware", "de-escalation", "switch", "stewardship"] },
+        { view: "guidelines", words: ["icmr", "who", "idsa", "sop", "policy"] }
+      ];
+      const match = buckets.find(bucket => bucket.words.some(word => q.includes(word)));
+      setView(match ? match.view : "dashboard");
+      toast(`Searching for "${query.trim()}".`);
+    }
+
     function toast(message) {
       const el = $("toast");
       el.textContent = message;
@@ -2589,6 +2621,16 @@
       $("reviewUploadBtn").addEventListener("click", reviewSurveillanceUpload);
       $("downloadSurveillanceTemplateBtn").addEventListener("click", downloadSurveillanceTemplate);
       $("globalSearch").addEventListener("input", e => { state.search = norm(e.target.value); render(); });
+      $("globalSearchForm").addEventListener("submit", e => {
+        e.preventDefault();
+        routeSearch($("globalSearch").value);
+      });
+      $("globalSearch").addEventListener("keydown", e => {
+        if (e.key === "Escape") {
+          e.currentTarget.value = "";
+          routeSearch("");
+        }
+      });
       $("themeSwatches").addEventListener("click", e => {
         const swatch = e.target.closest("[data-theme]");
         if (!swatch) return;
