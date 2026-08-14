@@ -314,7 +314,7 @@
     }
     .home-tagline {
       position: absolute;
-      left: clamp(210px, 18vw, 300px);
+      left: clamp(24px, 5vw, 56px);
       right: clamp(24px, 5vw, 56px);
       bottom: clamp(96px, 14vh, 150px);
       z-index: 2;
@@ -445,126 +445,6 @@
       object-fit: contain;
       object-position: center center;
       display: block;
-    }
-    .superbug-callout {
-      position: absolute;
-      left: clamp(28px, 5.2vw, 76px);
-      bottom: clamp(26px, 4.5vh, 54px);
-      z-index: 3;
-      display: grid;
-      justify-items: center;
-      gap: 8px;
-      transform: rotate(-3deg);
-      pointer-events: none;
-    }
-    .superbug-icon {
-      position: relative;
-      width: clamp(92px, 12vw, 154px);
-      height: clamp(78px, 10vw, 132px);
-    }
-    .superbug-cape {
-      position: absolute;
-      width: 64%;
-      height: 42%;
-      right: 0;
-      top: 26%;
-      background: #d76a62;
-      border-radius: 18px 80% 80% 18px;
-      transform: rotate(13deg);
-      box-shadow: 0 8px 12px rgba(142, 70, 64, .12);
-    }
-    .superbug-body {
-      position: absolute;
-      width: 62%;
-      height: 66%;
-      left: 22%;
-      bottom: 0;
-      border-radius: 48% 48% 42% 42%;
-      background: #75c9d4;
-      box-shadow: inset -10px -12px 0 rgba(25, 121, 130, .12);
-    }
-    .superbug-head {
-      position: absolute;
-      width: 53%;
-      height: 58%;
-      left: 24%;
-      top: 0;
-      border-radius: 48% 48% 42% 42%;
-      background: #d7f4f6;
-      box-shadow: inset -10px -8px 0 rgba(75, 172, 179, .12);
-    }
-    .superbug-eye {
-      position: absolute;
-      width: 6%;
-      height: 8%;
-      top: 27%;
-      border-radius: 50%;
-      background: #1d2c2c;
-      z-index: 2;
-    }
-    .superbug-eye.left { left: 39%; }
-    .superbug-eye.right { left: 57%; }
-    .superbug-smile {
-      position: absolute;
-      width: 18%;
-      height: 7%;
-      left: 45%;
-      top: 40%;
-      border-radius: 0 0 20px 20px;
-      background: #fff;
-      z-index: 2;
-    }
-    .superbug-arm {
-      position: absolute;
-      width: 37%;
-      height: 8%;
-      left: 4%;
-      top: 56%;
-      border-radius: 999px;
-      background: #317f8a;
-      z-index: 1;
-    }
-    .superbug-leg {
-      position: absolute;
-      width: 36%;
-      height: 9%;
-      left: 52%;
-      bottom: 2%;
-      border-radius: 999px;
-      background: #317f8a;
-      transform: rotate(42deg);
-      z-index: 1;
-    }
-    .superbug-belt {
-      position: absolute;
-      width: 36%;
-      height: 8%;
-      left: 37%;
-      top: 52%;
-      border-radius: 999px;
-      background: #2e6f8f;
-      transform: rotate(-8deg);
-      z-index: 3;
-    }
-    .superbug-buckle {
-      position: absolute;
-      width: 10%;
-      height: 10%;
-      left: 50%;
-      top: 50%;
-      border: 3px solid #17302f;
-      border-radius: 50%;
-      background: #fff;
-      z-index: 4;
-    }
-    .superbug-text {
-      color: #1f4f7a;
-      font-family: "Comic Sans MS", "Comic Sans", cursive;
-      font-size: clamp(18px, 2.3vw, 31px);
-      font-weight: 900;
-      line-height: 1.02;
-      text-align: center;
-      text-shadow: 0 2px 12px rgba(255,255,255,.86);
     }
     .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
     .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
@@ -1421,18 +1301,8 @@
       .home-visual { border-radius: 0; }
       .home-tagline {
         bottom: 48px;
-        left: clamp(132px, 19vw, 190px);
         font-size: clamp(22px, 4.5vw, 34px);
       }
-      .superbug-callout {
-        left: clamp(16px, 3vw, 34px);
-        bottom: 22px;
-      }
-      .superbug-icon {
-        width: clamp(70px, 11vw, 104px);
-        height: clamp(58px, 9vw, 90px);
-      }
-      .superbug-text { font-size: clamp(15px, 2.8vw, 22px); }
       .quick-grid, .priority-layout { grid-template-columns: 1fr; }
       .home-options { grid-template-columns: 1fr; }
       .grid-4, .grid-3, .grid-2, .form-grid, .dose-output, .stacked-bar, .filter-panel, .reference-grid, .dashboard-metrics, .dashboard-hero, .continue-panel, .intake-panel, .schema-grid { grid-template-columns: 1fr; }
@@ -1456,11 +1326,7 @@
       .home-option p { display: none; }
       .home-option-tag { font-size: 8px; letter-spacing: .06em; }
       .home-option-arrow { width: 22px; height: 22px; font-size: 11px; }
-      .home-tagline { left: 96px; right: 12px; bottom: 28px; font-size: 16px; }
-      .superbug-callout { left: 10px; bottom: 16px; gap: 4px; }
-      .superbug-icon { width: 56px; height: 48px; }
-      .superbug-buckle { border-width: 2px; }
-      .superbug-text { font-size: 12px; max-width: 86px; }
+      .home-tagline { left: 16px; right: 16px; bottom: 34px; font-size: 18px; }
       .home-option { align-items: flex-start; }
       .home-option-top { align-self: flex-start; }
       .metric { min-height: auto; }
@@ -1568,21 +1434,6 @@
               </div>
               <div class="home-visual" aria-label="Healthy community illustration">
                 <img src="assets/community-hero.png" alt="Smiling multi-generational community">
-                <div class="superbug-callout" aria-hidden="true">
-                  <div class="superbug-icon">
-                    <span class="superbug-cape"></span>
-                    <span class="superbug-body"></span>
-                    <span class="superbug-head"></span>
-                    <span class="superbug-eye left"></span>
-                    <span class="superbug-eye right"></span>
-                    <span class="superbug-smile"></span>
-                    <span class="superbug-arm"></span>
-                    <span class="superbug-leg"></span>
-                    <span class="superbug-belt"></span>
-                    <span class="superbug-buckle"></span>
-                  </div>
-                  <div class="superbug-text">No Superbugs Allowed</div>
-                </div>
                 <p class="home-tagline">Navigating AMR nuances for a healthy community</p>
               </div>
             </div>
