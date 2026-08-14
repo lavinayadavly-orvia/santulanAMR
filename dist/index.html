@@ -1449,6 +1449,15 @@
       learning: ["E-Learning", "CME modules for antimicrobial stewardship"]
     };
 
+    function validViewName(name) {
+      return Object.prototype.hasOwnProperty.call(views, name) ? name : "dashboard";
+    }
+
+    function initialViewName() {
+      const hashView = window.location?.hash ? window.location.hash.slice(1) : "";
+      return validViewName(hashView || localStorage.getItem("santulanAmrLastView") || state.view);
+    }
+
     const metrics = [
       ["Active guidelines", "47", "ICMR, WHO AWaRe, IDSA, local SOPs", "good"],
       ["Case studies", "5", "Curated patient journeys", "good"],
@@ -1747,12 +1756,16 @@
     }
 
     function setView(name) {
-      state.view = name;
+      state.view = validViewName(name);
+      localStorage.setItem("santulanAmrLastView", state.view);
+      if (window.location?.hash !== undefined && window.location.hash.slice(1) !== state.view) {
+        history.replaceState(null, "", `#${state.view}`);
+      }
       document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
-      $("view-" + name).classList.add("active");
-      document.querySelectorAll(".nav-item").forEach(el => el.classList.toggle("active", el.dataset.view === name));
-      $("viewTitle").textContent = views[name][0];
-      $("viewSub").textContent = views[name][1];
+      $("view-" + state.view).classList.add("active");
+      document.querySelectorAll(".nav-item").forEach(el => el.classList.toggle("active", el.dataset.view === state.view));
+      $("viewTitle").textContent = views[state.view][0];
+      $("viewSub").textContent = views[state.view][1];
       $("sidebar").classList.remove("open");
       window.scrollTo({ top: 0, behavior: "smooth" });
       render();
@@ -2283,12 +2296,15 @@
       });
       $("modalClose").addEventListener("click", () => $("modalBackdrop").classList.remove("visible"));
       $("modalBackdrop").addEventListener("click", e => { if (e.target === $("modalBackdrop")) $("modalBackdrop").classList.remove("visible"); });
+      if (window.addEventListener) {
+        window.addEventListener("hashchange", () => setView(initialViewName()));
+      }
     }
 
     populateSelects();
     loadPatients();
     bindEvents();
-    render();
+    setView(initialViewName());
   </script>
 </body>
 </html>
