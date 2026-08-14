@@ -514,6 +514,56 @@
     }
     .result-box.visible { display: block; }
     .result-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-weight: 830; color: var(--teal-dark); margin-bottom: 12px; }
+    .intake-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .intake-steps {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .intake-step {
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .intake-step b {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--theme);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+    }
+    .field-note {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      margin-top: 8px;
+    }
+    .schema-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .schema-pill {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 760;
+    }
     .rec-line {
       display: grid;
       grid-template-columns: 20px 1fr;
@@ -1002,7 +1052,7 @@
       .topbar-inner { flex-wrap: wrap; min-height: 68px; padding: 12px 14px; }
       .global-search { width: 100%; order: 3; }
       .content { padding: 16px; }
-      .grid-4, .grid-3, .grid-2, .form-grid, .dose-output, .stacked-bar, .filter-panel, .reference-grid, .dashboard-metrics, .dashboard-hero, .continue-panel { grid-template-columns: 1fr; }
+      .grid-4, .grid-3, .grid-2, .form-grid, .dose-output, .stacked-bar, .filter-panel, .reference-grid, .dashboard-metrics, .dashboard-hero, .continue-panel, .intake-panel, .schema-grid { grid-template-columns: 1fr; }
       .hero-actions { grid-template-columns: 1fr; }
       .timeline-row { grid-template-columns: 1fr; }
       .item { grid-template-columns: auto 1fr; }
@@ -1287,6 +1337,40 @@
         </div>
 
         <div class="view" id="view-surveillance">
+          <div class="panel pad" style="margin-bottom:14px;">
+            <div class="intake-panel">
+              <div>
+                <div class="panel-title">How AMR Tracking Starts</div>
+                <div class="panel-sub">Surveillance is built from uploaded aggregate antibiogram and stewardship files. This page should show where the state, hospital, or programme team provides the data before trends are interpreted.</div>
+                <div class="intake-steps">
+                  <div class="intake-step"><b>1</b><span><strong>Upload state or hospital data</strong><br>Use antibiogram extracts, organism-drug sensitivity files, and optional stewardship review logs.</span></div>
+                  <div class="intake-step"><b>2</b><span><strong>Validate and de-identify</strong><br>Exclude patient/sample identifiers; keep only aggregate fields needed for resistance and teaching signals.</span></div>
+                  <div class="intake-step"><b>3</b><span><strong>Generate surveillance signals</strong><br>Calculate resistance pressure, restricted antibiotic starts, review delays, IV-to-oral opportunities, and case-study priorities.</span></div>
+                </div>
+              </div>
+              <div>
+                <div class="field">
+                  <label for="surveillanceUpload">Upload surveillance file</label>
+                  <input id="surveillanceUpload" type="file" accept=".csv,.xlsx,.xls">
+                </div>
+                <div class="field-note">Static demo mode: this upload explains the intake flow and validates the file name locally. Production deployment should connect this control to the approved state/hospital data pipeline.</div>
+                <div class="actions" style="margin-top:12px;">
+                  <button class="btn primary" id="reviewUploadBtn">Review upload readiness</button>
+                  <button class="btn" id="downloadSurveillanceTemplateBtn">Download CSV template</button>
+                </div>
+                <div class="schema-grid">
+                  <div class="schema-pill">state</div>
+                  <div class="schema-pill">facility / ward</div>
+                  <div class="schema-pill">year / month</div>
+                  <div class="schema-pill">organism</div>
+                  <div class="schema-pill">specimen</div>
+                  <div class="schema-pill">drug</div>
+                  <div class="schema-pill">S / I / R result</div>
+                  <div class="schema-pill">isolate count</div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="grid-4" id="surveillanceMetrics"></div>
           <div class="section-title">Programme Signals</div>
           <div class="grid-2">
@@ -2081,6 +2165,35 @@
       toast("Certificate downloaded.");
     }
 
+    function reviewSurveillanceUpload() {
+      const input = $("surveillanceUpload");
+      const file = input?.files?.[0];
+      if (!file) {
+        openModal("Upload readiness", "AMR surveillance intake", `<p class="item-meta" style="font-size:14px;">Choose a CSV or Excel file first. The expected input is aggregate surveillance data, not patient-level files.</p><div class="rec-line"><span class="rec-ico">1</span><span>Use the template fields: state, facility, ward, period, organism, specimen, drug, S/I/R result, and isolate count.</span></div><div class="rec-line"><span class="rec-ico">2</span><span>Remove patient identifiers, sample IDs, phone numbers, names, addresses, and free-text notes before ingestion.</span></div><div class="rec-line"><span class="rec-ico">3</span><span>In production, this upload should route to the approved state or hospital validation workflow before dashboards update.</span></div>`);
+        return;
+      }
+      openModal("Upload readiness", file.name, `<p class="item-meta" style="font-size:14px;">This file is selected locally for review. Static demo mode does not upload it to a server.</p><div class="rec-line"><span class="rec-ico">F</span><span><b>File:</b> ${file.name}</span></div><div class="rec-line"><span class="rec-ico">S</span><span><b>Size:</b> ${(file.size / 1024).toFixed(1)} KB</span></div><div class="rec-line"><span class="rec-ico">N</span><span><b>Next step:</b> connect this control to the validated ingestion service that parses, de-identifies, approves, and publishes aggregate AMR signals.</span></div>`);
+    }
+
+    function downloadSurveillanceTemplate() {
+      const rows = [
+        ["state", "facility", "ward_or_specialty", "year", "month", "organism", "specimen", "drug", "sir_result", "isolate_count", "restricted_antibiotic_start_count", "review_overdue_count", "iv_to_oral_opportunity_count"],
+        ["Maharashtra", "Example Medical College", "ICU", "2026", "01", "Klebsiella pneumoniae", "Blood", "Meropenem", "R", "18", "6", "4", "2"],
+        ["Maharashtra", "Example Medical College", "Medicine", "2026", "01", "Escherichia coli", "Urine", "Nitrofurantoin", "S", "42", "0", "1", "7"]
+      ];
+      const csv = rows.map(row => row.map(csvEscape).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "santulanamr-amr-surveillance-template.csv";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      toast("Surveillance template downloaded.");
+    }
+
     function renderCaseTrend(patientId) {
       const trajectory = caseTrajectories[patientId] || {
         synopsis: "Curated case synopsis not yet entered.",
@@ -2109,6 +2222,8 @@
       $("doseClearBtn").addEventListener("click", clearDosingReview);
       $("exportCasesBtn").addEventListener("click", exportReviewCases);
       $("seedCasesBtn").addEventListener("click", () => { state.patients = demoPatients.slice(); savePatients(); renderPatients(); $("reviewBadge").textContent = state.patients.length; toast("Curated cases restored."); });
+      $("reviewUploadBtn").addEventListener("click", reviewSurveillanceUpload);
+      $("downloadSurveillanceTemplateBtn").addEventListener("click", downloadSurveillanceTemplate);
       $("globalSearch").addEventListener("input", e => { state.search = norm(e.target.value); render(); });
       $("themeSwatches").addEventListener("click", e => {
         const swatch = e.target.closest("[data-theme]");
