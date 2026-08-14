@@ -2928,6 +2928,7 @@
             <div class="field"><label for="mentorTopic">Topic</label><select id="mentorTopic" required><option>Empirical antibiotic choice</option><option>De-escalation or switch</option><option>Antibiogram interpretation</option><option>Dosing safety reference</option><option>Antibiotic hopping or premature stop</option><option>Other stewardship question</option></select></div>
           </div>
           <div class="field full"><label for="mentorContext">Case context</label><textarea id="mentorContext" required placeholder="Summarise syndrome, severity, setting, culture status, state antibiogram issue, and current antibiotic concern. Do not enter patient identifiers."></textarea></div>
+          <div class="field full"><label for="mentorCaseFile">Attach case file</label><input id="mentorCaseFile" type="file" accept="application/pdf,image/png,image/jpeg,image/webp,image/heic,image/heif"><div class="field-note">Optional: attach a de-identified PDF or image. Demo mode validates the file locally and does not upload it.</div></div>
           <div class="field full"><label for="mentorQuestion">Question for mentor</label><textarea id="mentorQuestion" required placeholder="What decision are you stuck on? For example: empirical choice, whether to narrow, when to stop, when to switch, or what guideline section to review."></textarea></div>
           <div class="case-section"><h4>Routing note</h4><p>In a live backend, this request can be sent to a configured mentor group or KOL panel with the selected urgency, topic, and de-identified case context.</p></div>
           <div class="disclaimer">Platform Demo Interface: this prototype prepares the mentor query but does not send it to a server. Do not enter patient names, phone numbers, addresses, identifiers, or free-text details that could identify a person.</div>
@@ -2937,14 +2938,23 @@
     }
 
     function submitMentorQuery() {
+      const file = $("mentorCaseFile")?.files?.[0];
+      if (file && !/^image\/|application\/pdf$/.test(file.type || "")) {
+        toast("Attach a PDF or image file only.");
+        return;
+      }
+      const attachmentHtml = file
+        ? `<div class="case-decision">Attachment prepared: ${escapeHtml(file.name)} (${escapeHtml(file.type || "file")}, ${(file.size / 1024).toFixed(1)} KB).</div>`
+        : `<div class="case-decision">No case file attached.</div>`;
       openModal("Mentor query prepared", "Ready for live backend routing", `
         <div class="case-study">
-          <section class="case-section"><h4>What happens next</h4><p>The live version would send this de-identified stewardship question to the configured mentor/KOL queue, attach the selected urgency and topic, and record the response for learning follow-up.</p></section>
+          <section class="case-section"><h4>What happens next</h4><p>The live version would send this de-identified stewardship question to the configured mentor/KOL queue, attach the selected urgency, topic, and optional case file, and record the response for learning follow-up.</p></section>
           <div class="case-decision-grid">
             <div class="case-decision">Recommended backend route: mentor/KOL triage queue.</div>
             <div class="case-decision">Required safety check: remove identifiers before submission.</div>
             <div class="case-decision">Suggested turnaround: based on urgency selected by the doctor.</div>
             <div class="case-decision">Response format: guideline section, rationale, and stewardship decision options.</div>
+            ${attachmentHtml}
           </div>
           <div class="disclaimer">Demo mode only: no query has been sent.</div>
         </div>
